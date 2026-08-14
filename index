@@ -1,0 +1,1666 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Викторина EOS — сезон 2</title>
+
+<!-- Шрифты: Unbounded (акцентный) + Montserrat (основной) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/unbounded/500.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/unbounded/700.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/unbounded/900.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/montserrat/400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/montserrat/500.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/montserrat/600.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/montserrat/700.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/montserrat/800.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/montserrat/900.css">
+
+<style>
+/* ============================================================
+   ВИКТОРИНА EOS · СЕЗОН 2 · DESIGN v3 · COPY v2
+   ------------------------------------------------------------
+   01. Дизайн-токены
+   02. База, типографика, фон
+   03. Фоновые орбы
+   04. Шапка (hero)
+   05. Каркас и экраны
+   06. Карточки
+   07. Стартовый экран
+   08. Экран вопроса (таймер-кольцо, тост, сегменты)
+   09. Экран результата (кольцо точности, оценка)
+   10. Экран рейтинга (пьедестал + таблица)
+   11. Конфетти
+   12. Анимации
+   13. Адаптивность
+   14. Доступность
+   ============================================================ */
+
+/* ---------- 01. Дизайн-токены ---------- */
+:root {
+  --red-900: #6E0A11;
+  --red-700: #A5121B;
+  --red-600: #D0181F;
+  --red-500: #E01B24;
+  --red-400: #EE3B43;
+
+  --gold:      #E7C69A;
+  --gold-soft: #FFF8EF;
+
+  --surface:   #F5F5F8;
+  --card:      #FFFFFF;
+  --ink:       #1A1A1E;
+  --ink-soft:  #4A4A55;
+  --ink-muted: #8A8A99;
+  --line:      #EDEDF2;
+  --red-soft:  #FFF3F4;
+
+  --success:      #1E9E5A;
+  --success-soft: #E9F8EF;
+
+  --radius: 22px;
+
+  --shadow:      0 10px 30px rgba(30, 12, 14, .07), 0 2px 6px rgba(30, 12, 14, .04);
+  --shadow-lift: 0 22px 48px rgba(143, 15, 24, .16);
+  --shadow-red:  0 14px 32px rgba(208, 26, 34, .28);
+
+  --gradient-red:  linear-gradient(135deg, var(--red-700), var(--red-500) 55%, var(--red-400));
+  --gradient-hero: radial-gradient(120% 150% at 8% 0%, #5E070D 0%, #A5121B 38%, #D8181F 74%, #EA2C33 100%);
+
+  --font-body:    'Montserrat', system-ui, sans-serif;
+  --font-display: 'Unbounded', 'Montserrat', sans-serif;
+
+  --ease: cubic-bezier(.22, .61, .36, 1);
+}
+
+/* ---------- 02. База, типографика, фон ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  background: var(--surface);
+  color: var(--ink);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Тонкая сетка на фоне верхней части страницы */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 44px 44px;
+  opacity: .35;
+  -webkit-mask-image: linear-gradient(#000 0%, transparent 52%);
+          mask-image: linear-gradient(#000 0%, transparent 52%);
+}
+
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+::selection { background: rgba(224, 27, 36, .18); }
+
+:focus-visible {
+  outline: 3px solid rgba(224, 27, 36, .35);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.caps {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+/* ---------- 03. Фоновые орбы ---------- */
+.orb {
+  position: fixed;
+  z-index: 0;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: .45;
+  pointer-events: none;
+}
+.orb--left {
+  top: 26vh; left: -180px;
+  width: 440px; height: 440px;
+  background: #FFD9DC;
+  animation: orb-drift-a 18s var(--ease) infinite;
+}
+.orb--right {
+  right: -140px; bottom: -140px;
+  width: 380px; height: 380px;
+  background: #FFEFDC;
+  animation: orb-drift-b 22s var(--ease) infinite;
+}
+
+/* ---------- 04. Шапка (hero) ---------- */
+.hero {
+  position: relative;
+  padding: 52px 20px 78px;
+  background: var(--gradient-hero);
+  color: #fff;
+  text-align: center;
+  overflow: hidden;
+}
+.hero__ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, .13);
+  background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, .09), transparent 62%);
+}
+.hero__ring--lg { right: -90px;  bottom: -170px; width: 380px; height: 380px; }
+.hero__ring--sm { left: -120px;  top: -140px;    width: 300px; height: 300px; opacity: .7; }
+
+.hero__wave {
+  position: absolute;
+  left: 50%; bottom: -2px;
+  transform: translateX(-50%);
+  width: 150%; height: 56px;
+  background: var(--surface);
+  border-radius: 50% 50% 0 0;
+}
+
+.hero__badge {
+  display: inline-block;
+  padding: 9px 22px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .15);
+  border: 1px solid rgba(255, 255, 255, .22);
+  backdrop-filter: blur(6px);
+}
+.hero .caps { font-size: 10.5px; }
+
+.hero__title {
+  margin: 26px 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(26px, 5vw, 46px);
+  font-weight: 900;
+  letter-spacing: .01em;
+  line-height: 1.08;
+  text-shadow: 0 14px 34px rgba(0, 0, 0, .22);
+}
+.hero__title-accent { color: var(--gold); }
+
+.hero__tagline {
+  margin: 16px 0 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  opacity: .78;
+}
+
+/* Мини-статистика турнира */
+.hero__chips {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+.chip {
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .12);
+  border: 1px solid rgba(255, 255, 255, .2);
+  backdrop-filter: blur(6px);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  transition: transform .3s var(--ease), background .3s var(--ease);
+}
+.chip:hover { transform: translateY(-3px); background: rgba(255, 255, 255, .2); }
+.chip b { color: var(--gold); margin-right: 7px; font-size: 12.5px; }
+
+/* ---------- 05. Каркас и экраны ---------- */
+.page {
+  position: relative;
+  z-index: 2;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 22px 96px;
+}
+.lift { margin-top: -34px; }
+.stack { display: flex; flex-direction: column; gap: 16px; }
+
+.screen { display: none; }
+.screen.is-active {
+  display: block;
+  animation: rise .55s var(--ease) both;
+}
+
+/* ---------- 06. Карточки ---------- */
+.card {
+  padding: 36px;
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.card--flush { padding: 0; overflow: hidden; }
+.card--accent {
+  border-left: 4px solid transparent;
+  background-image: linear-gradient(var(--card), var(--card)), var(--gradient-red);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+.title {
+  margin: 0 0 10px;
+  font-size: 23px;
+  font-weight: 900;
+  letter-spacing: -.01em;
+}
+.subtitle {
+  margin: 0 0 28px;
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.7;
+  color: var(--ink-muted);
+}
+
+/* ---------- 07. Стартовый экран ---------- */
+.rules { margin: 0 0 30px; padding: 0; list-style: none; counter-reset: step; }
+.rules__item {
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+}
+.rules__item:first-child { padding-top: 0; }
+.rules__item:last-child  { border: none; padding-bottom: 0; }
+.rules__label {
+  min-width: 84px;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--red-600);
+}
+.rules__text { font-size: 13.5px; font-weight: 500; line-height: 1.6; color: var(--ink-soft); }
+.rules__text kbd {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.field {
+  width: 100%;
+  padding: 17px 22px;
+  font: 500 14.5px var(--font-body);
+  color: var(--ink);
+  background: #FAFAFC;
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, .03);
+  outline: none;
+  transition: border-color .3s var(--ease), box-shadow .3s var(--ease), background .3s var(--ease);
+}
+.field:focus {
+  background: #fff;
+  border-color: var(--red-400);
+  box-shadow: 0 0 0 4px rgba(224, 27, 36, .10);
+}
+.field--invalid {
+  border-color: var(--red-500);
+  box-shadow: 0 0 0 4px rgba(224, 27, 36, .10);
+  animation: shake .5s var(--ease);
+}
+.field-error {
+  display: none;
+  margin: 10px 4px 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--red-500);
+}
+.field-error.is-visible { display: block; }
+
+.actions { display: flex; flex-direction: column; gap: 14px; margin-top: 22px; }
+.actions--flush { margin-top: 0; }
+
+.btn {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  padding: 18px;
+  border-radius: 999px;
+  background: var(--gradient-red);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  box-shadow: var(--shadow-red);
+  transition: transform .35s var(--ease), box-shadow .35s var(--ease), background .35s var(--ease);
+}
+/* Блик, пробегающий по кнопке */
+.btn::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -80%;
+  width: 50%; height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .35), transparent);
+  transform: skewX(-20deg);
+  transition: left .6s var(--ease);
+}
+.btn:hover { transform: translateY(-3px); box-shadow: 0 20px 40px rgba(208, 26, 34, .34); }
+.btn:hover::after { left: 130%; }
+.btn:active { transform: translateY(-1px) scale(.985); }
+
+.btn--ghost {
+  background: #fff;
+  color: var(--red-600);
+  border: 1.5px solid #FFD3D6;
+  box-shadow: var(--shadow);
+}
+.btn--ghost::after { background: linear-gradient(100deg, transparent, rgba(224, 27, 36, .08), transparent); }
+.btn--ghost:hover { background: var(--red-soft); box-shadow: 0 14px 30px rgba(208, 26, 34, .13); }
+
+/* ---------- 08. Экран вопроса ---------- */
+.quiz-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22px 26px;
+  background: var(--gradient-hero);
+  color: #fff;
+}
+.quiz-bar__counter { opacity: .85; }
+
+/* Таймер-кольцо */
+.timer {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .12);
+  border: 1px solid rgba(255, 255, 255, .2);
+  transition: background .3s var(--ease), box-shadow .3s var(--ease);
+}
+.timer__ring { position: absolute; inset: 4px; transform: rotate(-90deg); }
+.timer__ring circle { fill: none; stroke-width: 4; stroke-linecap: round; }
+.timer__ring-bg   { stroke: rgba(255, 255, 255, .22); }
+.timer__ring-fill { stroke: #fff; }
+.timer__inner { position: relative; text-align: center; }
+.timer__value { font-family: var(--font-display); font-size: 21px; font-weight: 700; line-height: 1; }
+.timer__label { margin-top: 3px; font-size: 8px; font-weight: 700; letter-spacing: .16em; opacity: .75; text-transform: uppercase; }
+
+.timer--warn {
+  background: #fff;
+  box-shadow: 0 10px 26px rgba(224, 27, 36, .35);
+  animation: pulse 1s infinite;
+}
+.timer--warn .timer__ring-bg   { stroke: #F4CDD0; }
+.timer--warn .timer__ring-fill { stroke: var(--red-500); }
+.timer--warn .timer__value     { color: var(--red-600); }
+.timer--warn .timer__label     { color: var(--red-600); opacity: .8; }
+
+.quiz-body { position: relative; padding: 34px 30px 36px; }
+.question {
+  margin: 0;
+  font-size: clamp(18px, 3.4vw, 23px);
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 30px;
+}
+.option {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 118px;
+  padding: 22px 20px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--ink);
+  background: #fff;
+  border: 1.5px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  transition: transform .32s var(--ease), background .32s var(--ease),
+              border-color .32s var(--ease), box-shadow .32s var(--ease), opacity .32s var(--ease);
+}
+.option:hover:not(:disabled) {
+  transform: translateY(-5px);
+  background: var(--red-soft);
+  border-color: #FFCACE;
+  box-shadow: var(--shadow-lift);
+}
+.option:active:not(:disabled) { transform: translateY(-2px) scale(.98); }
+.option:disabled { cursor: default; }
+
+.option__key {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--red-soft);
+  color: var(--red-600);
+  font-size: 12px;
+  font-weight: 900;
+  transition: background .3s var(--ease), color .3s var(--ease);
+}
+.option__text { padding-right: 30px; }
+
+/* Иконка результата (✓ / ✕) */
+.option__icon {
+  position: absolute;
+  top: 16px; right: 16px;
+  display: grid;
+  place-items: center;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  font-size: 13px;
+  font-weight: 900;
+  opacity: 0;
+  transform: scale(.4);
+  transition: opacity .35s var(--ease), transform .35s var(--ease);
+}
+.option--correct .option__icon { opacity: 1; transform: scale(1); background: var(--success); color: #fff; }
+.option--correct .option__icon::before { content: '✓'; }
+.option--wrong .option__icon   { opacity: 1; transform: scale(1); background: var(--red-500); color: #fff; }
+.option--wrong .option__icon::before { content: '✕'; }
+
+.option--selected { background: var(--red-soft); border-color: var(--red-400); box-shadow: var(--shadow-lift); }
+.option--selected .option__key { background: var(--red-500); color: #fff; }
+
+.option--correct { background: var(--success-soft); border-color: var(--success); animation: pop .45s var(--ease); }
+.option--correct .option__key { background: var(--success); color: #fff; }
+.option--wrong { background: var(--red-soft); border-color: var(--red-500); animation: shake .5s var(--ease); }
+.option--wrong .option__key { background: var(--red-500); color: #fff; }
+.option--dim { opacity: .4; }
+
+.quiz-hint {
+  margin: 22px 0 0;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  color: var(--ink-muted);
+}
+
+/* Всплывающий тост обратной связи */
+.toast {
+  position: absolute;
+  top: 12px; left: 50%;
+  transform: translate(-50%, -14px);
+  z-index: 5;
+  padding: 10px 22px;
+  border-radius: 999px;
+  white-space: nowrap;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .35s var(--ease), transform .35s var(--ease);
+}
+.toast.is-visible { opacity: 1; transform: translate(-50%, 0); }
+.toast--ok   { background: var(--success);  box-shadow: 0 10px 24px rgba(30, 158, 90, .35); }
+.toast--fail { background: var(--red-500);  box-shadow: 0 10px 24px rgba(224, 27, 36, .35); }
+.toast--warn { background: var(--ink);      box-shadow: 0 10px 24px rgba(0, 0, 0, .25); }
+
+/* Сегментированный прогресс: зелёный — верно, красный — ошибка */
+.progress { display: flex; gap: 6px; margin-top: 24px; }
+.progress__seg {
+  flex: 1;
+  height: 6px;
+  border-radius: 99px;
+  background: #DFDFE7;
+  transition: background .4s var(--ease);
+}
+.progress__seg--ok      { background: var(--success); }
+.progress__seg--fail    { background: var(--red-500); }
+.progress__seg--current {
+  background: linear-gradient(90deg, var(--red-400), var(--red-600));
+  animation: seg-pulse 1.6s infinite;
+}
+
+/* ---------- 09. Экран результата ---------- */
+.result {
+  padding: 42px 34px;
+  color: #fff;
+  background: var(--gradient-red);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-red);
+}
+.result__caption { text-align: center; opacity: .8; }
+
+.result__grid {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 30px;
+  align-items: center;
+  margin-top: 28px;
+  text-align: left;
+}
+
+/* Кольцо точности */
+.acc { position: relative; width: 150px; height: 150px; }
+.acc svg { position: absolute; inset: 0; transform: rotate(-90deg); }
+.acc circle { fill: none; stroke-width: 9; stroke-linecap: round; }
+.acc__bg   { stroke: rgba(255, 255, 255, .18); }
+.acc__fill { stroke: #fff; }
+.acc__center {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  text-align: center;
+}
+.acc__num { font-family: var(--font-display); font-size: 30px; font-weight: 900; }
+.acc__label { margin-top: 5px; font-size: 9px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; opacity: .8; }
+
+.result__grade {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 3.6vw, 27px);
+  font-weight: 700;
+  line-height: 1.25;
+}
+.result__note { margin-top: 10px; font-size: 13px; font-weight: 500; line-height: 1.65; opacity: .88; }
+.result__name { margin-top: 14px; color: var(--gold); font-size: 14px; font-weight: 700; letter-spacing: .02em; }
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 28px;
+}
+.stat {
+  padding: 18px 8px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .13);
+  border: 1px solid rgba(255, 255, 255, .18);
+  text-align: center;
+}
+.stat__value { font-family: var(--font-display); font-size: 20px; font-weight: 700; }
+.stat__sep { opacity: .55; font-size: 15px; }
+.stat__label {
+  margin-top: 6px;
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  opacity: .82;
+}
+
+/* ---------- 10. Экран рейтинга: пьедестал ---------- */
+.podium {
+  display: flex;
+  gap: 14px;
+  align-items: flex-end;
+  margin-top: 42px;
+}
+.podium__col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.podium__card {
+  position: relative;
+  width: 100%;
+  padding: 20px 10px 16px;
+  text-align: center;
+  background: #fff;
+  border: 1.5px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  animation: rise .6s var(--ease) both;
+  transition: transform .35s var(--ease), box-shadow .35s var(--ease);
+}
+.podium__card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+.podium__col--1 .podium__card {
+  border-color: #EAD9BC;
+  background: linear-gradient(#FFFDF8, #fff);
+  animation-delay: .12s;
+}
+.podium__col--3 .podium__card { animation-delay: .24s; }
+
+.podium__medal {
+  position: absolute;
+  top: -13px; left: 50%;
+  transform: translateX(-50%);
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 900;
+  color: #5C430F;
+  background: linear-gradient(135deg, #FFE9B8, #E8BC66);
+  box-shadow: 0 4px 10px rgba(190, 150, 60, .4);
+}
+.podium__medal--2 { background: linear-gradient(135deg, #F2F3F6, #C3C7D1); color: #555A66; box-shadow: 0 4px 10px rgba(140, 145, 160, .35); }
+.podium__medal--3 { background: linear-gradient(135deg, #F3D3B3, #D89A62); color: #6B4318; box-shadow: 0 4px 10px rgba(190, 130, 80, .35); }
+
+.podium__ava {
+  width: 46px; height: 46px;
+  margin: 8px auto 9px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  font-weight: 900;
+  color: #fff;
+  background: var(--gradient-red);
+}
+.podium__col--2 .podium__ava { background: linear-gradient(135deg, #9BA0AE, #C9CDD6); }
+.podium__col--3 .podium__ava { background: linear-gradient(135deg, #C98A57, #E6B98C); }
+
+.podium__name { font-size: 12px; font-weight: 800; line-height: 1.35; overflow-wrap: anywhere; }
+.podium__meta { margin-top: 6px; font-size: 10.5px; font-weight: 600; color: var(--ink-muted); }
+.podium__meta b { color: var(--ink); font-size: 12px; }
+.podium__tag {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--red-500);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.podium__bar { width: 78%; margin-top: 10px; border-radius: 10px 10px 0 0; }
+.podium__col--1 .podium__bar { height: 104px; background: var(--gradient-red); opacity: .92; }
+.podium__col--2 .podium__bar { height: 70px;  background: linear-gradient(180deg, #C9CDD6, #EDEFF3); }
+.podium__col--3 .podium__bar { height: 48px;  background: linear-gradient(180deg, #E0A874, #F3DCC8); }
+
+/* ---------- 10б. Экран рейтинга: таблица ---------- */
+.board { margin-top: 30px; }
+.board__row {
+  display: grid;
+  grid-template-columns: 46px 1fr 64px 64px;
+  gap: 12px;
+  align-items: center;
+  padding: 16px 14px;
+  border-bottom: 1px solid var(--line);
+  border-radius: 12px;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+.board__row--head {
+  padding: 12px 14px;
+  border-bottom: 1.5px solid var(--line);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--red-600);
+}
+.board__place { font-weight: 900; color: var(--ink-muted); text-align: center; }
+.board__num   { font-weight: 700; color: var(--ink-soft); text-align: center; }
+.board__row--mine { background: var(--red-soft); box-shadow: inset 3px 0 0 var(--red-500); }
+.board__tag {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--red-500);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.board__gap { display: flex; justify-content: center; gap: 7px; padding: 12px 0; }
+.board__gap span { width: 5px; height: 5px; border-radius: 50%; background: #C9C9D2; }
+
+/* ---------- 11. Конфетти ---------- */
+.confetti {
+  position: fixed;
+  top: -20px;
+  z-index: 99;
+  width: 9px; height: 9px;
+  pointer-events: none;
+  animation: confetti-fall 3s linear forwards;
+}
+
+/* ---------- 12. Анимации ---------- */
+@keyframes rise { from { opacity: 0; transform: translateY(22px); } }
+@keyframes pulse { 50% { transform: scale(1.06); } }
+@keyframes seg-pulse { 50% { opacity: .5; } }
+@keyframes orb-drift-a { 50% { transform: translate(60px, -40px); } }
+@keyframes orb-drift-b { 50% { transform: translate(-50px, 40px); } }
+@keyframes confetti-fall { to { transform: translateY(105vh) rotate(680deg); opacity: 0; } }
+@keyframes shake {
+  20% { transform: translateX(-7px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(3px); }
+}
+@keyframes pop {
+  0%   { transform: scale(1); }
+  45%  { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+
+/* ---------- 13. Адаптивность ---------- */
+@media (max-width: 560px) {
+  .hero { padding: 42px 20px 64px; }
+  .card { padding: 26px; }
+  .quiz-body { padding: 26px 22px 28px; }
+  .quiz-bar { padding: 18px 20px; }
+  .result { padding: 32px 22px; }
+
+  .options { grid-template-columns: 1fr; gap: 12px; }
+  .option {
+    flex-direction: row;
+    align-items: center;
+    gap: 14px;
+    min-height: auto;
+    padding: 18px;
+  }
+  .option__text { padding-right: 36px; }
+  .option__icon { top: 50%; right: 14px; transform: translateY(-50%) scale(.4); }
+  .option--correct .option__icon,
+  .option--wrong .option__icon { transform: translateY(-50%) scale(1); }
+
+  .result__grid { grid-template-columns: 1fr; justify-items: center; gap: 22px; text-align: center; }
+  .result__grade { font-size: 19px; }
+
+  .podium { gap: 8px; margin-top: 36px; }
+  .podium__ava { width: 38px; height: 38px; font-size: 12px; }
+  .podium__name { font-size: 10.5px; }
+  .podium__meta { font-size: 9px; }
+  .podium__col--1 .podium__bar { height: 72px; }
+  .podium__col--2 .podium__bar { height: 48px; }
+  .podium__col--3 .podium__bar { height: 32px; }
+
+  .board__row {
+    grid-template-columns: 36px 1fr 44px 52px;
+    padding: 14px 10px;
+    font-size: 12.5px;
+  }
+}
+
+/* ---------- 14. Доступность ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="orb orb--left"></div>
+<div class="orb orb--right"></div>
+
+<header class="hero">
+  <div class="hero__ring hero__ring--lg"></div>
+  <div class="hero__ring hero__ring--sm"></div>
+
+  <div class="hero__badge"><span class="caps">Корпоративный интеллектуальный турнир · сезон 2</span></div>
+  <h1 class="hero__title">ВИКТОРИНА <span class="hero__title-accent">EOS</span></h1>
+  <p class="hero__tagline">Отвечайте быстро и точно — рейтинг сезона уже ждёт</p>
+
+  <div class="hero__chips">
+    <div class="chip"><b>8</b>вопросов</div>
+    <div class="chip"><b>20</b>секунд на вопрос</div>
+    <div class="chip"><b>топ-10</b>в рейтинге</div>
+  </div>
+
+  <div class="hero__wave"></div>
+</header>
+
+<main class="page">
+
+  <!-- ===================== СТАРТ ===================== -->
+  <section class="screen is-active" data-screen="start">
+    <div class="card card--accent lift">
+      <h2 class="title">Проверьте свои знания</h2>
+      <p class="subtitle">Короткая викторина о компании и корпоративных инструментах. Играть просто: прочитайте правила ниже, представьтесь — и вперёд, к вершине рейтинга.</p>
+
+      <ul class="rules">
+        <li class="rules__item">
+          <b class="rules__label">Шаг 1 · Старт</b>
+          <span class="rules__text">Укажите фамилию и имя в поле ниже и нажмите «Начать викторину». Так ваш результат попадёт в рейтинг.</span>
+        </li>
+        <li class="rules__item">
+          <b class="rules__label">Шаг 2 · Вопросы</b>
+          <span class="rules__text">Игра случайным образом выберет 8 вопросов из банка сезона. У всех участников разные наборы.</span>
+        </li>
+        <li class="rules__item">
+          <b class="rules__label">Шаг 3 · Время</b>
+          <span class="rules__text">На каждый вопрос — 20 секунд. Таймер не останавливается, пауз нет. Следите за кольцом обратного отсчёта.</span>
+        </li>
+        <li class="rules__item">
+          <b class="rules__label">Шаг 4 · Ответ</b>
+          <span class="rules__text">Кликните вариант один раз, чтобы выбрать его, и ещё раз — чтобы подтвердить. С клавиатуры: клавиши <kbd>1</kbd>–<kbd>4</kbd> и <kbd>Enter</kbd>.</span>
+        </li>
+        <li class="rules__item">
+          <b class="rules__label">Важно</b>
+          <span class="rules__text">Изменить ответ или вернуться к предыдущему вопросу нельзя. Если время закончится, вопрос закроется без ответа.</span>
+        </li>
+        <li class="rules__item">
+          <b class="rules__label">Итог</b>
+          <span class="rules__text">После последнего вопроса вы увидите свой результат, а он автоматически появится в рейтинге сезона.</span>
+        </li>
+      </ul>
+
+      <input class="field" id="player-name" placeholder="Фамилия и имя — например, Иванов Иван" autocomplete="off">
+      <p class="field-error" id="name-error">Укажите фамилию и имя полностью — иначе результат нельзя будет зачесть в рейтинге</p>
+
+      <div class="actions">
+        <button class="btn" id="btn-start">Начать викторину</button>
+        <button class="btn btn--ghost" id="btn-peek">Открыть рейтинг сезона</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== ВОПРОС ===================== -->
+  <section class="screen" data-screen="quiz">
+    <div class="card card--flush lift">
+      <div class="quiz-bar">
+        <div class="quiz-bar__counter caps">Вопрос <span id="q-number">1</span> из <span id="q-total">8</span></div>
+
+        <div class="timer" id="timer-box" aria-live="polite">
+          <svg class="timer__ring" viewBox="0 0 72 72">
+            <circle class="timer__ring-bg"   cx="36" cy="36" r="32"></circle>
+            <circle class="timer__ring-fill" id="timer-ring" cx="36" cy="36" r="32"></circle>
+          </svg>
+          <div class="timer__inner">
+            <div class="timer__value" id="timer-value">20</div>
+            <div class="timer__label">сек</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="quiz-body">
+        <div class="toast" id="toast"></div>
+        <p class="question" id="question-text">—</p>
+        <div class="options" id="options" aria-label="Варианты ответа"></div>
+        <p class="quiz-hint">Один клик — выбор, второй — подтверждение · с клавиатуры: 1–4 и Enter</p>
+      </div>
+    </div>
+
+    <div class="progress" id="progress" aria-hidden="true"></div>
+  </section>
+
+  <!-- ===================== РЕЗУЛЬТАТ ===================== -->
+  <section class="screen" data-screen="result">
+    <div class="stack">
+      <div class="result lift">
+        <div class="result__caption caps">Викторина завершена — вот ваш результат</div>
+
+        <div class="result__grid">
+          <div class="acc">
+            <svg viewBox="0 0 120 120">
+              <circle class="acc__bg"   cx="60" cy="60" r="52"></circle>
+              <circle class="acc__fill" id="acc-fill" cx="60" cy="60" r="52"></circle>
+            </svg>
+            <div class="acc__center">
+              <div class="acc__num" id="acc-num">0%</div>
+              <div class="acc__label">точность</div>
+            </div>
+          </div>
+
+          <div class="result__info">
+            <div class="result__grade" id="res-grade">—</div>
+            <div class="result__note" id="res-note">—</div>
+            <div class="result__name" id="res-name">—</div>
+          </div>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="stat__value"><span id="res-score">0</span><span class="stat__sep" id="res-total">/8</span></div>
+            <div class="stat__label">верных ответов</div>
+          </div>
+          <div class="stat"><div class="stat__value" id="stat-time">0:00</div><div class="stat__label">время игры</div></div>
+          <div class="stat"><div class="stat__value" id="stat-streak">0</div><div class="stat__label">лучшая серия</div></div>
+        </div>
+      </div>
+
+      <div class="actions actions--flush">
+        <button class="btn" id="btn-to-board">Открыть рейтинг</button>
+        <button class="btn btn--ghost" id="btn-restart">Попробовать ещё раз</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== РЕЙТИНГ ===================== -->
+  <section class="screen" data-screen="leaderboard">
+    <div class="card lift">
+      <h2 class="title">Рейтинг сезона</h2>
+      <p class="subtitle">Тройка лидеров поднимается на пьедестал, ниже — места с 4-го по 10-е. Если очки равны, выше тот, кто ответил быстрее.</p>
+
+      <div class="podium" id="podium"></div>
+
+      <div class="board">
+        <div class="board__row board__row--head">
+          <div>Место</div>
+          <div>Участник</div>
+          <div class="board__num">Верно</div>
+          <div class="board__num">Время</div>
+        </div>
+        <div id="board-rows"></div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn--ghost" id="btn-back">На главную</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+(() => {
+  'use strict';
+
+  /* ============================================================
+     01. КОНСТАНТЫ И КОНФИГУРАЦИЯ
+     ============================================================ */
+
+  const TIMEOUT = -1;                 // маркер истёкшего времени
+  const TIMER_RADIUS = 32;            // радиус кольца таймера (SVG)
+  const TIMER_C = 2 * Math.PI * TIMER_RADIUS;
+  const ACC_RADIUS = 52;              // радиус кольца точности (SVG)
+  const ACC_C = 2 * Math.PI * ACC_RADIUS;
+
+  // URL для отправки данных в Google Sheets
+  const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzcTAE5UyWP5G_Xvo2U0HsSw-TYo-72mou9PKinPlLK9takarO9qdzpfEsMzA0njxPj/exec';
+
+  const CONFIG = Object.freeze({
+    questionsPerGame:   8,
+    secondsPerQuestion: 20,
+    warningThreshold:   5,
+    answerRevealDelay:  950,
+    passThreshold:      75,
+    boardSize:          10,
+    podiumSize:         3,
+    answerLetters:      Object.freeze(['А', 'Б', 'В', 'Г']),
+    storageKey:         'eos-quiz-season-2',
+    namePattern:        /^[А-Яа-яЁёA-Za-z][А-Яа-яЁёA-Za-z-]*\s+[А-Яа-яЁёA-Za-z][А-Яа-яЁёA-Za-z-]*$/,
+  });
+
+  /** Текстовые оценки результата (по % точности, сверху вниз). */
+  const GRADES = Object.freeze([
+    { min: 100, title: 'Безупречно!',         note: '8 из 8 — ни одной ошибки. Вы главный претендент на пьедестал сезона.' },
+    { min: 75,  title: 'Отличный результат',  note: 'До идеала остался всего шаг. Ещё одна попытка — и пьедестал ваш.' },
+    { min: 50,  title: 'Хороший уровень',     note: 'Больше половины ответов верные. Немного практики — и топ будет вашим.' },
+    { min: 0,   title: 'Есть куда расти',     note: 'Загляните в базу знаний компании и возвращайтесь: вторая попытка всегда лучше первой.' },
+  ]);
+
+  /** Подписи всплывающих уведомлений во время игры. */
+  const TOASTS = Object.freeze({
+    correct: 'Верно! +1',
+    wrong:   'Неверно — правильный ответ подсвечен',
+    timeout: 'Время вышло — правильный ответ подсвечен',
+  });
+
+  const QUESTION_BANK = Object.freeze([
+    { text: 'Какой год считается годом основания компании EOS Group?',
+      options: ['1974', '1983', '1991', '2002'], correctIndex: 0 },
+    { text: 'Что означает аббревиатура CRM в корпоративных системах?',
+      options: ['Customer Relationship Management', 'Corporate Resource Model', 'Central Risk Monitor', 'Client Rating Method'], correctIndex: 0 },
+    { text: 'Какой документ фиксирует правила обработки персональных данных в организации?',
+      options: ['Политика обработки ПДн', 'Штатное расписание', 'Учётная политика', 'Табель учёта'], correctIndex: 0 },
+    { text: 'Что такое KPI?',
+      options: ['Ключевой показатель эффективности', 'Категория интеллекта', 'Класс приоритета', 'Кодекс правил'], correctIndex: 0 },
+    { text: 'Какая функция Excel суммирует значения по условию?',
+      options: ['СУММЕСЛИ', 'ВПР', 'СЦЕПИТЬ', 'СЧЁТЗ'], correctIndex: 0 },
+    { text: 'Что означает дедлайн в проектной работе?',
+      options: ['Крайний срок', 'Первый этап', 'Бюджет', 'Список задач'], correctIndex: 0 },
+    { text: 'Какой инструмент используют для визуализации сроков проекта?',
+      options: ['Диаграмма Ганта', 'Круговая диаграмма', 'Гистограмма', 'Спарклайн'], correctIndex: 0 },
+    { text: 'Что такое онбординг?',
+      options: ['Адаптация нового сотрудника', 'Списание техники', 'Годовой отчёт', 'Инвентаризация'], correctIndex: 0 },
+    { text: 'Сколько минут в трёх с половиной часах?',
+      options: ['210', '180', '240', '195'], correctIndex: 0 },
+    { text: 'Какой протокол защищает передачу данных в браузере?',
+      options: ['HTTPS', 'FTP', 'SMTP', 'POP3'], correctIndex: 0 },
+    { text: 'Что означает термин «эскалация» в поддержке клиентов?',
+      options: ['Передача на более высокий уровень', 'Закрытие обращения', 'Отказ клиенту', 'Скидка'], correctIndex: 0 },
+    { text: 'Что показывает конверсия в воронке продаж?',
+      options: ['Долю перешедших на следующий этап', 'Общую выручку', 'Число сотрудников', 'Срок хранения данных'], correctIndex: 0 },
+  ]);
+
+  const DEMO_RESULTS = Object.freeze([
+    { id: 'demo-01', name: 'Максимов Никита',     score: 8, seconds: 161 },
+    { id: 'demo-02', name: 'Карапетян Милена',    score: 8, seconds: 184 },
+    { id: 'demo-03', name: 'Белов Дмитрий',       score: 7, seconds: 178 },
+    { id: 'demo-04', name: 'Насибян Евгений',     score: 7, seconds: 202 },
+    { id: 'demo-05', name: 'Синельников Дмитрий', score: 6, seconds: 167 },
+    { id: 'demo-06', name: 'Умярова Алеся',       score: 6, seconds: 191 },
+    { id: 'demo-07', name: 'Галимов Раиль',       score: 6, seconds: 215 },
+    { id: 'demo-08', name: 'Комиссаров Иван',     score: 5, seconds: 172 },
+    { id: 'demo-09', name: 'Попова Яна',          score: 5, seconds: 198 },
+    { id: 'demo-10', name: 'Сафонов Илья',        score: 4, seconds: 220 },
+  ]);
+
+  /* ============================================================
+     02. СОСТОЯНИЕ ИГРЫ
+     ============================================================ */
+
+  const state = {
+    player: '',
+    questions: [],
+    index: 0,
+    score: 0,
+    spentSeconds: 0,
+    timeLeft: CONFIG.secondsPerQuestion,
+    timerId: null,
+    locked: false,
+    selected: null,
+    history: [],          // true/false по каждому вопросу → сегменты прогресса
+    streak: 0,
+    bestStreak: 0,
+    lastResultId: null,
+    toastId: null,
+    answers: [],          // детальные ответы для отправки в Google Sheets
+  };
+
+  /* ============================================================
+     03. КЭШ DOM-ЭЛЕМЕНТОВ
+     ============================================================ */
+
+  const $  = (selector, scope = document) => scope.querySelector(selector);
+  const $$ = (selector, scope = document) => [...scope.querySelectorAll(selector)];
+
+  const dom = {
+    screens: $$('.screen'),
+    start: {
+      name:      $('#player-name'),
+      nameError: $('#name-error'),
+      start:     $('#btn-start'),
+      peek:      $('#btn-peek'),
+    },
+    quiz: {
+      number:     $('#q-number'),
+      total:      $('#q-total'),
+      timer:      $('#timer-box'),
+      timerRing:  $('#timer-ring'),
+      timerValue: $('#timer-value'),
+      toast:      $('#toast'),
+      question:   $('#question-text'),
+      options:    $('#options'),
+      progress:   $('#progress'),
+    },
+    result: {
+      accFill: $('#acc-fill'),
+      accNum:  $('#acc-num'),
+      grade:   $('#res-grade'),
+      note:    $('#res-note'),
+      name:    $('#res-name'),
+      score:   $('#res-score'),
+      total:   $('#res-total'),
+      time:    $('#stat-time'),
+      streak:  $('#stat-streak'),
+      toBoard: $('#btn-to-board'),
+      restart: $('#btn-restart'),
+    },
+    board: {
+      podium: $('#podium'),
+      rows:   $('#board-rows'),
+      back:   $('#btn-back'),
+    },
+  };
+
+  /* ============================================================
+     04. УТИЛИТЫ
+     ============================================================ */
+
+  function shuffle(list) {
+    const copy = [...list];
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  }
+
+  const formatTime = (totalSeconds) =>
+    `${Math.floor(totalSeconds / 60)}:${String(totalSeconds % 60).padStart(2, '0')}`;
+
+  const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => (
+    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]
+  ));
+
+  const getInitials = (name) =>
+    name.split(/\s+/).map((word) => word[0]).join('').slice(0, 2).toUpperCase();
+
+  function capitalizeName(raw) {
+    return raw
+      .split(/\s+/)
+      .slice(0, 2)
+      .map((word) => word[0].toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
+  }
+
+  /** Плавный счётчик с произвольным форматом вывода. */
+  function animateNumber(element, target, { duration = 700, format = (v) => v } = {}) {
+    const startedAt = performance.now();
+    const tick = (now) => {
+      const progress = Math.min((now - startedAt) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      element.textContent = format(Math.round(target * eased));
+      if (progress < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+
+  /* ============================================================
+     05. НАВИГАЦИЯ МЕЖДУ ЭКРАНАМИ
+     ============================================================ */
+
+  function showScreen(name) {
+    dom.screens.forEach((screen) =>
+      screen.classList.toggle('is-active', screen.dataset.screen === name));
+    window.scrollTo(0, 0);
+  }
+
+  const isScreenActive = (name) =>
+    document.querySelector(`[data-screen="${name}"]`)?.classList.contains('is-active') ?? false;
+
+  /* ============================================================
+     06. СТАРТ ИГРЫ
+     ============================================================ */
+
+  function startGame() {
+    const rawName = dom.start.name.value.trim();
+
+    if (!CONFIG.namePattern.test(rawName)) {
+      setNameError(true);
+      dom.start.name.focus();
+      return;
+    }
+
+    state.player       = capitalizeName(rawName);
+    state.questions    = buildQuiz();
+    state.index        = 0;
+    state.score        = 0;
+    state.spentSeconds = 0;
+    state.history      = [];
+    state.streak       = 0;
+    state.bestStreak   = 0;
+    state.answers      = [];
+
+    dom.quiz.total.textContent = CONFIG.questionsPerGame;
+    buildProgressSegments();
+    showScreen('quiz');
+    renderQuestion();
+  }
+
+  function buildQuiz() {
+    return shuffle(QUESTION_BANK)
+      .slice(0, CONFIG.questionsPerGame)
+      .map((item) => {
+        const correctText = item.options[item.correctIndex];
+        const options     = shuffle(item.options);
+        return { text: item.text, options, correctIndex: options.indexOf(correctText) };
+      });
+  }
+
+  function setNameError(visible) {
+    dom.start.name.classList.remove('field--invalid');
+    if (visible) {
+      void dom.start.name.offsetWidth; // перезапуск анимации shake
+      dom.start.name.classList.add('field--invalid');
+    }
+    dom.start.nameError.classList.toggle('is-visible', visible);
+  }
+
+  /* ============================================================
+     07. ОТРИСОВКА ВОПРОСА
+     ============================================================ */
+
+  function renderQuestion() {
+    const question = state.questions[state.index];
+
+    state.locked   = false;
+    state.selected = null;
+
+    dom.quiz.number.textContent   = state.index + 1;
+    dom.quiz.question.textContent = question.text;
+    dom.quiz.options.innerHTML    = question.options
+      .map((option, idx) => `
+        <button type="button" class="option" data-index="${idx}">
+          <span class="option__key">${CONFIG.answerLetters[idx]}</span>
+          <span class="option__text">${escapeHtml(option)}</span>
+          <span class="option__icon" aria-hidden="true"></span>
+        </button>`)
+      .join('');
+
+    paintProgress();
+    startTimer();
+  }
+
+  /* ---------- Сегментированный прогресс ---------- */
+
+  function buildProgressSegments() {
+    dom.quiz.progress.innerHTML = state.questions
+      .map(() => '<span class="progress__seg"></span>')
+      .join('');
+  }
+
+  function paintProgress() {
+    $$('.progress__seg', dom.quiz.progress).forEach((segment, idx) => {
+      segment.className = 'progress__seg';
+      if (idx < state.history.length) {
+        segment.classList.add(state.history[idx] ? 'progress__seg--ok' : 'progress__seg--fail');
+      } else if (idx === state.index) {
+        segment.classList.add('progress__seg--current');
+      }
+    });
+  }
+
+  /* ---------- Тост обратной связи ---------- */
+
+  function showToast(kind, text) {
+    const toast = dom.quiz.toast;
+    clearTimeout(state.toastId);
+
+    toast.className = `toast toast--${kind}`;
+    toast.textContent = text;
+    void toast.offsetWidth;
+    toast.classList.add('is-visible');
+
+    state.toastId = setTimeout(() => toast.classList.remove('is-visible'), 1100);
+  }
+
+  /* ============================================================
+     08. ТАЙМЕР-КОЛЬЦО
+     ============================================================ */
+
+  function startTimer() {
+    stopTimer();
+
+    state.timeLeft = CONFIG.secondsPerQuestion;
+    dom.quiz.timer.classList.remove('timer--warn');
+    updateTimerUi();
+    restartTimerRing();
+
+    state.timerId = setInterval(() => {
+      state.timeLeft     -= 1;
+      state.spentSeconds += 1;
+      updateTimerUi();
+
+      if (state.timeLeft <= CONFIG.warningThreshold) dom.quiz.timer.classList.add('timer--warn');
+      if (state.timeLeft <= 0) confirmAnswer(TIMEOUT);
+    }, 1000);
+  }
+
+  function stopTimer() {
+    if (state.timerId !== null) {
+      clearInterval(state.timerId);
+      state.timerId = null;
+    }
+    freezeTimerRing();
+  }
+
+  const updateTimerUi = () => { dom.quiz.timerValue.textContent = state.timeLeft; };
+
+  /** Кольцо «стекает» с 0 до полной длины окружности за отведённое время. */
+  function restartTimerRing() {
+    const ring = dom.quiz.timerRing;
+    ring.style.transition = 'none';
+    ring.style.strokeDashoffset = '0';
+    void ring.getBoundingClientRect();
+    ring.style.transition = `stroke-dashoffset ${CONFIG.secondsPerQuestion}s linear`;
+    ring.style.strokeDashoffset = String(TIMER_C);
+  }
+
+  function freezeTimerRing() {
+    const ring = dom.quiz.timerRing;
+    ring.style.strokeDashoffset = getComputedStyle(ring).strokeDashoffset;
+    ring.style.transition = 'none';
+  }
+
+  /* ============================================================
+     09. ОБРАБОТКА ОТВЕТА
+     ============================================================ */
+
+  function handleOptionClick(index) {
+    if (state.locked) return;
+
+    if (state.selected === index) {
+      confirmAnswer(index);
+      return;
+    }
+
+    state.selected = index;
+    $$('.option', dom.quiz.options).forEach((button) =>
+      button.classList.toggle('option--selected', Number(button.dataset.index) === index));
+  }
+
+  function confirmAnswer(chosenIndex) {
+    if (state.locked) return;
+
+    state.locked = true;
+    stopTimer();
+
+    const question  = state.questions[state.index];
+    const isCorrect = chosenIndex === question.correctIndex;
+    const timeSpent = CONFIG.secondsPerQuestion - state.timeLeft;
+
+    // Сохраняем детали ответа для Google Sheets
+    state.answers.push({
+      questionNumber: state.index + 1,
+      questionText: question.text,
+      userAnswer: chosenIndex === TIMEOUT ? 'Время вышло' : question.options[chosenIndex],
+      correctAnswer: question.options[question.correctIndex],
+      isCorrect: isCorrect,
+      timeSpent: timeSpent,
+    });
+
+    $$('.option', dom.quiz.options).forEach((button) => {
+      const idx = Number(button.dataset.index);
+      button.disabled = true;
+      button.classList.remove('option--selected');
+
+      if (idx === question.correctIndex) button.classList.add('option--correct');
+      else if (idx === chosenIndex)      button.classList.add('option--wrong');
+      else                               button.classList.add('option--dim');
+    });
+
+    if (isCorrect) {
+      state.score += 1;
+      state.streak += 1;
+      state.bestStreak = Math.max(state.bestStreak, state.streak);
+    } else {
+      state.streak = 0;
+    }
+    state.history.push(isCorrect);
+    paintProgress();
+
+    if (chosenIndex === TIMEOUT) showToast('warn', TOASTS.timeout);
+    else if (isCorrect)          showToast('ok',   TOASTS.correct);
+    else                         showToast('fail', TOASTS.wrong);
+
+    setTimeout(nextQuestion, CONFIG.answerRevealDelay);
+  }
+
+  function nextQuestion() {
+    state.index += 1;
+    if (state.index < state.questions.length) renderQuestion();
+    else finishGame();
+  }
+
+  /* ============================================================
+     10. ФИНАЛ ИГРЫ
+     ============================================================ */
+
+  function finishGame() {
+    stopTimer();
+
+    const total    = state.questions.length;
+    const accuracy = Math.round((state.score / total) * 100);
+    const grade    = GRADES.find((item) => accuracy >= item.min);
+
+    state.lastResultId = saveResult();
+
+    // Отправляем данные в Google Sheets
+    sendToGoogleSheets();
+
+    dom.result.grade.textContent  = grade.title;
+    dom.result.note.textContent   = grade.note;
+    dom.result.name.textContent   = state.player;
+    dom.result.time.textContent   = formatTime(state.spentSeconds);
+    dom.result.streak.textContent = state.bestStreak;
+
+    animateNumber(dom.result.score, state.score);
+    animateNumber(dom.result.accNum, accuracy, { duration: 1100, format: (v) => `${v}%` });
+    animateAccuracyRing(accuracy);
+
+    showScreen('result');
+    if (accuracy >= CONFIG.passThreshold) launchConfetti();
+  }
+
+  /** Плавное заполнение кольца точности. */
+  function animateAccuracyRing(accuracy) {
+    const ring = dom.result.accFill;
+    ring.style.transition = 'none';
+    ring.style.strokeDashoffset = String(ACC_C);
+    void ring.getBoundingClientRect();
+    ring.style.transition = 'stroke-dashoffset 1.2s var(--ease)';
+    ring.style.strokeDashoffset = String(ACC_C * (1 - accuracy / 100));
+  }
+
+  /* ============================================================
+     11. ОТПРАВКА ДАННЫХ В GOOGLE SHEETS
+     ============================================================ */
+
+  function sendToGoogleSheets() {
+    const resultData = {
+      id: state.lastResultId,
+      name: state.player,
+      score: state.score,
+      totalQuestions: state.questions.length,
+      accuracy: Math.round((state.score / state.questions.length) * 100),
+      timeSeconds: state.spentSeconds,
+      bestStreak: state.bestStreak,
+      answers: state.answers,
+    };
+
+    fetch(GOOGLE_SHEETS_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(resultData),
+    })
+    .then(() => {
+      console.log('✅ Данные отправлены в Google Sheets');
+    })
+    .catch((error) => {
+      console.error('❌ Ошибка отправки в Google Sheets:', error);
+    });
+  }
+
+  /* ============================================================
+     12. ЗАГРУЗКА РЕЙТИНГА ИЗ GOOGLE SHEETS
+     ============================================================ */
+
+  async function loadLeaderboardFromSheets() {
+    try {
+      const response = await fetch(GOOGLE_SHEETS_URL);
+      const data = await response.json();
+      return Array.isArray(data) ? data : [];
+    } catch (error) {
+      console.error('Ошибка загрузки рейтинга:', error);
+      return [];
+    }
+  }
+
+  /* ============================================================
+     13. РЕЙТИНГ И ХРАНЕНИЕ
+     ============================================================ */
+
+  function readSavedResults() {
+    try {
+      return JSON.parse(localStorage.getItem(CONFIG.storageKey)) ?? [];
+    } catch {
+      return [];
+    }
+  }
+
+  function saveResult() {
+    const entry = {
+      id: Date.now(),
+      name: state.player,
+      score: state.score,
+      seconds: state.spentSeconds,
+    };
+    try {
+      localStorage.setItem(CONFIG.storageKey, JSON.stringify([...readSavedResults(), entry]));
+    } catch {
+      /* приватный режим — результат не сохраняется */
+    }
+    return entry.id;
+  }
+
+  async function renderLeaderboard(highlightId = null) {
+    // Показываем экран рейтинга сразу
+    showScreen('leaderboard');
+    
+    // Загружаем результаты из Google Sheets
+    const sheetResults = await loadLeaderboardFromSheets();
+    
+    // Если есть данные из Sheets, используем их
+    let all = sheetResults.length > 0 ? sheetResults : [...DEMO_RESULTS, ...readSavedResults()];
+    
+    // Сортируем по очкам и времени
+    all = all.sort((a, b) => b.score - a.score || a.seconds - b.seconds);
+    
+    const isMine = (entry) => entry.name === state.player;
+    
+    // Пьедестал: топ-3
+    dom.board.podium.innerHTML = buildPodiumHtml(all.slice(0, CONFIG.podiumSize), isMine);
+    
+    // Таблица: места 4–10
+    const rest = all.slice(CONFIG.podiumSize, CONFIG.boardSize);
+    
+    let html = rest
+      .map((entry, offset) => boardRowHtml(entry, CONFIG.podiumSize + offset, isMine(entry)))
+      .join('');
+    
+    dom.board.rows.innerHTML = html;
+  }
+
+  /** Пьедестал рисуется в порядке: серебро · золото · бронза. */
+  function buildPodiumHtml(topThree, isMine) {
+    const layout = [1, 0, 2]; // индексы мест для визуального порядка
+    return layout
+      .filter((rank) => topThree[rank])
+      .map((rank) => podiumCardHtml(topThree[rank], rank, isMine(topThree[rank])))
+      .join('');
+  }
+
+  function podiumCardHtml(entry, rank, mine) {
+    const place = rank + 1;
+    return `
+      <div class="podium__col podium__col--${place}">
+        <div class="podium__card">
+          <div class="podium__medal ${place > 1 ? `podium__medal--${place}` : ''}">${place}</div>
+          <div class="podium__ava">${escapeHtml(getInitials(entry.name))}</div>
+          <div class="podium__name">${escapeHtml(entry.name)}</div>
+          <div class="podium__meta"><b>${entry.score}</b> верно · ${formatTime(entry.seconds)}</div>
+          ${mine ? '<div class="podium__tag">вы</div>' : ''}
+        </div>
+        <div class="podium__bar"></div>
+      </div>`;
+  }
+
+  function boardRowHtml(entry, place, mine) {
+    const rowClass = `board__row${mine ? ' board__row--mine' : ''}`;
+    const tag      = mine ? '<span class="board__tag">вы</span>' : '';
+    return `
+      <div class="${rowClass}">
+        <div class="board__place">${place + 1}</div>
+        <div class="board__name">${escapeHtml(entry.name)}${tag}</div>
+        <div class="board__num">${entry.score}</div>
+        <div class="board__num">${formatTime(entry.seconds)}</div>
+      </div>`;
+  }
+
+  /* ============================================================
+     14. ЭФФЕКТЫ
+     ============================================================ */
+
+  function launchConfetti(count = 90) {
+    const colors   = ['#E01B24', '#E7C69A', '#FFFFFF', '#A5121B'];
+    const fragment = document.createDocumentFragment();
+
+    Array.from({ length: count }, (_, i) => {
+      const piece = document.createElement('div');
+      piece.className = 'confetti';
+      piece.style.left           = `${Math.random() * 100}vw`;
+      piece.style.background     = colors[i % colors.length];
+      piece.style.animationDelay = `${(Math.random() * 1.2).toFixed(2)}s`;
+      if (i % 3 === 0) piece.style.borderRadius = '50%';
+      fragment.appendChild(piece);
+    });
+
+    document.body.appendChild(fragment);
+    setTimeout(() => $$('.confetti').forEach((piece) => piece.remove()), 4600);
+  }
+
+  /* ============================================================
+     15. СОБЫТИЯ
+     ============================================================ */
+
+  function bindEvents() {
+    dom.start.start.addEventListener('click', startGame);
+    dom.start.peek.addEventListener('click', () => renderLeaderboard());
+    dom.start.name.addEventListener('input', () => setNameError(false));
+    dom.start.name.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') startGame();
+    });
+
+    dom.quiz.options.addEventListener('click', (event) => {
+      const button = event.target.closest('.option');
+      if (button) handleOptionClick(Number(button.dataset.index));
+    });
+
+    dom.result.toBoard.addEventListener('click', () => renderLeaderboard(state.lastResultId));
+    dom.result.restart.addEventListener('click', () => showScreen('start'));
+    dom.board.back.addEventListener('click', () => showScreen('start'));
+
+    document.addEventListener('keydown', (event) => {
+      if (!isScreenActive('quiz') || state.locked) return;
+
+      const digit = Number(event.key);
+      if (Number.isInteger(digit) && digit >= 1 && digit <= CONFIG.answerLetters.length) {
+        handleOptionClick(digit - 1);
+      } else if (event.key === 'Enter' && state.selected !== null) {
+        confirmAnswer(state.selected);
+      }
+    });
+  }
+
+  /* ============================================================
+     16. ИНИЦИАЛИЗАЦИЯ
+     ============================================================ */
+
+  function init() {
+    dom.result.total.textContent = `/${CONFIG.questionsPerGame}`;
+
+    // Подготовка SVG-колец
+    dom.quiz.timerRing.style.strokeDasharray  = String(TIMER_C);
+    dom.quiz.timerRing.style.strokeDashoffset = '0';
+    dom.result.accFill.style.strokeDasharray  = String(ACC_C);
+    dom.result.accFill.style.strokeDashoffset = String(ACC_C);
+
+    bindEvents();
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
