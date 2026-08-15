@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Викторина EOS — сезон 2</title>
+<title>Викторина EOS — Август 2026</title>
 
 <!-- Шрифты: Unbounded (акцентный) + Montserrat (основной) -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/unbounded/500.css">
@@ -18,7 +18,7 @@
 
 <style>
 /* ============================================================
-   ВИКТОРИНА EOS · СЕЗОН 2 · DESIGN v3 · COPY v2
+   ВИКТОРИНА EOS · АВГУСТ 2026 · DESIGN v3 · COPY v3
    ------------------------------------------------------------
    01. Дизайн-токены
    02. База, типографика, фон
@@ -286,17 +286,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   color: var(--red-600);
 }
 .rules__text { font-size: 13.5px; font-weight: 500; line-height: 1.6; color: var(--ink-soft); }
-.rules__text kbd {
-  display: inline-block;
-  padding: 2px 7px;
-  border-radius: 6px;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  font-family: inherit;
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--ink-soft);
-}
 
 .field {
   width: 100%;
@@ -732,8 +721,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   letter-spacing: .1em;
   text-transform: uppercase;
 }
-.board__gap { display: flex; justify-content: center; gap: 7px; padding: 12px 0; }
-.board__gap span { width: 5px; height: 5px; border-radius: 50%; background: #C9C9D2; }
 
 /* ---------- 11. Конфетти ---------- */
 .confetti {
@@ -822,14 +809,14 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   <div class="hero__ring hero__ring--lg"></div>
   <div class="hero__ring hero__ring--sm"></div>
 
-  <div class="hero__badge"><span class="caps">Корпоративный интеллектуальный турнир · сезон 2</span></div>
-  <h1 class="hero__title">ВИКТОРИНА <span class="hero__title-accent">EOS</span></h1>
-  <p class="hero__tagline">Отвечайте быстро и точно — рейтинг сезона уже ждёт</p>
+  <div class="hero__badge"><span class="caps">Своя игра EOS · Август 2026</span></div>
+  <h1 class="hero__title">ВИКТОРИНА <span class="hero__title-accent">АВГУСТА</span></h1>
+  <p class="hero__tagline">10 вопросов об исторических событиях августа — проверь, насколько хорошо ты знаешь этот месяц</p>
 
   <div class="hero__chips">
-    <div class="chip"><b>8</b>вопросов</div>
-    <div class="chip"><b>20</b>секунд на вопрос</div>
-    <div class="chip"><b>топ-10</b>в рейтинге</div>
+    <div class="chip"><b>10</b>вопросов</div>
+    <div class="chip"><b>25</b>секунд на вопрос</div>
+    <div class="chip"><b>рейтинг</b>месяца</div>
   </div>
 
   <div class="hero__wave"></div>
@@ -840,42 +827,34 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   <!-- ===================== СТАРТ ===================== -->
   <section class="screen is-active" data-screen="start">
     <div class="card card--accent lift">
-      <h2 class="title">Проверьте свои знания</h2>
-      <p class="subtitle">Короткая викторина о компании и корпоративных инструментах. Играть просто: прочитайте правила ниже, представьтесь — и вперёд, к вершине рейтинга.</p>
+      <h2 class="title">Проверь свои знания</h2>
+      <p class="subtitle">10 вопросов о событиях, которые произошли в августе. Ответь на все и займи место в рейтинге месяца.</p>
 
       <ul class="rules">
         <li class="rules__item">
-          <b class="rules__label">Шаг 1 · Старт</b>
-          <span class="rules__text">Укажите фамилию и имя в поле ниже и нажмите «Начать викторину». Так ваш результат попадёт в рейтинг.</span>
+          <b class="rules__label">Шаг 1</b>
+          <span class="rules__text">Представься: укажи фамилию и имя</span>
         </li>
         <li class="rules__item">
-          <b class="rules__label">Шаг 2 · Вопросы</b>
-          <span class="rules__text">Игра случайным образом выберет 8 вопросов из банка сезона. У всех участников разные наборы.</span>
+          <b class="rules__label">Шаг 2</b>
+          <span class="rules__text">Ответь на 10 вопросов об августе</span>
         </li>
         <li class="rules__item">
-          <b class="rules__label">Шаг 3 · Время</b>
-          <span class="rules__text">На каждый вопрос — 20 секунд. Таймер не останавливается, пауз нет. Следите за кольцом обратного отсчёта.</span>
-        </li>
-        <li class="rules__item">
-          <b class="rules__label">Шаг 4 · Ответ</b>
-          <span class="rules__text">Кликните вариант один раз, чтобы выбрать его, и ещё раз — чтобы подтвердить. С клавиатуры: клавиши <kbd>1</kbd>–<kbd>4</kbd> и <kbd>Enter</kbd>.</span>
+          <b class="rules__label">Шаг 3</b>
+          <span class="rules__text">На каждый вопрос — 25 секунд</span>
         </li>
         <li class="rules__item">
           <b class="rules__label">Важно</b>
-          <span class="rules__text">Изменить ответ или вернуться к предыдущему вопросу нельзя. Если время закончится, вопрос закроется без ответа.</span>
-        </li>
-        <li class="rules__item">
-          <b class="rules__label">Итог</b>
-          <span class="rules__text">После последнего вопроса вы увидите свой результат, а он автоматически появится в рейтинге сезона.</span>
+          <span class="rules__text">Засчитывается только первое прохождение</span>
         </li>
       </ul>
 
       <input class="field" id="player-name" placeholder="Фамилия и имя — например, Иванов Иван" autocomplete="off">
-      <p class="field-error" id="name-error">Укажите фамилию и имя полностью — иначе результат нельзя будет зачесть в рейтинге</p>
+      <p class="field-error" id="name-error">Укажи фамилию и имя полностью</p>
 
       <div class="actions">
         <button class="btn" id="btn-start">Начать викторину</button>
-        <button class="btn btn--ghost" id="btn-peek">Открыть рейтинг сезона</button>
+        <button class="btn btn--ghost" id="btn-peek">Открыть рейтинг месяца</button>
       </div>
     </div>
   </section>
@@ -884,7 +863,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   <section class="screen" data-screen="quiz">
     <div class="card card--flush lift">
       <div class="quiz-bar">
-        <div class="quiz-bar__counter caps">Вопрос <span id="q-number">1</span> из <span id="q-total">8</span></div>
+        <div class="quiz-bar__counter caps">Вопрос <span id="q-number">1</span> из <span id="q-total">10</span></div>
 
         <div class="timer" id="timer-box" aria-live="polite">
           <svg class="timer__ring" viewBox="0 0 72 72">
@@ -892,7 +871,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
             <circle class="timer__ring-fill" id="timer-ring" cx="36" cy="36" r="32"></circle>
           </svg>
           <div class="timer__inner">
-            <div class="timer__value" id="timer-value">20</div>
+            <div class="timer__value" id="timer-value">25</div>
             <div class="timer__label">сек</div>
           </div>
         </div>
@@ -902,7 +881,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
         <div class="toast" id="toast"></div>
         <p class="question" id="question-text">—</p>
         <div class="options" id="options" aria-label="Варианты ответа"></div>
-        <p class="quiz-hint">Один клик — выбор, второй — подтверждение · с клавиатуры: 1–4 и Enter</p>
+        <p class="quiz-hint">Кликни на вариант дважды для подтверждения ответа</p>
       </div>
     </div>
 
@@ -913,7 +892,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   <section class="screen" data-screen="result">
     <div class="stack">
       <div class="result lift">
-        <div class="result__caption caps">Викторина завершена — вот ваш результат</div>
+        <div class="result__caption caps">Викторина завершена — вот твой результат</div>
 
         <div class="result__grid">
           <div class="acc">
@@ -936,7 +915,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
         <div class="stats">
           <div class="stat">
-            <div class="stat__value"><span id="res-score">0</span><span class="stat__sep" id="res-total">/8</span></div>
+            <div class="stat__value"><span id="res-score">0</span><span class="stat__sep" id="res-total">/10</span></div>
             <div class="stat__label">верных ответов</div>
           </div>
           <div class="stat"><div class="stat__value" id="stat-time">0:00</div><div class="stat__label">время игры</div></div>
@@ -946,7 +925,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
       <div class="actions actions--flush">
         <button class="btn" id="btn-to-board">Открыть рейтинг</button>
-        <button class="btn btn--ghost" id="btn-restart">Попробовать ещё раз</button>
       </div>
     </div>
   </section>
@@ -954,8 +932,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   <!-- ===================== РЕЙТИНГ ===================== -->
   <section class="screen" data-screen="leaderboard">
     <div class="card lift">
-      <h2 class="title">Рейтинг сезона</h2>
-      <p class="subtitle">Тройка лидеров поднимается на пьедестал, ниже — места с 4-го по 10-е. Если очки равны, выше тот, кто ответил быстрее.</p>
+      <h2 class="title">Рейтинг августа</h2>
+      <p class="subtitle">Топ-3 на пьедестале. Все участники месяца — в таблице. При равных очках побеждает скорость.</p>
 
       <div class="podium" id="podium"></div>
 
@@ -995,71 +973,67 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzcTAE5UyWP5G_Xvo2U0HsSw-TYo-72mou9PKinPlLK9takarO9qdzpfEsMzA0njxPj/exec';
 
   const CONFIG = Object.freeze({
-    questionsPerGame:   8,
-    secondsPerQuestion: 20,
+    questionsPerGame:   10,
+    secondsPerQuestion: 25,
     warningThreshold:   5,
     answerRevealDelay:  950,
     passThreshold:      75,
-    boardSize:          10,
+    boardSize:          0, // 0 = без ограничений
     podiumSize:         3,
     answerLetters:      Object.freeze(['А', 'Б', 'В', 'Г']),
-    storageKey:         'eos-quiz-season-2',
+    storageKey:         'eos-quiz-august-2026',
     namePattern:        /^[А-Яа-яЁёA-Za-z][А-Яа-яЁёA-Za-z-]*\s+[А-Яа-яЁёA-Za-z][А-Яа-яЁёA-Za-z-]*$/,
   });
 
   /** Текстовые оценки результата (по % точности, сверху вниз). */
   const GRADES = Object.freeze([
-    { min: 100, title: 'Безупречно!',         note: '8 из 8 — ни одной ошибки. Вы главный претендент на пьедестал сезона.' },
-    { min: 75,  title: 'Отличный результат',  note: 'До идеала остался всего шаг. Ещё одна попытка — и пьедестал ваш.' },
-    { min: 50,  title: 'Хороший уровень',     note: 'Больше половины ответов верные. Немного практики — и топ будет вашим.' },
-    { min: 0,   title: 'Есть куда расти',     note: 'Загляните в базу знаний компании и возвращайтесь: вторая попытка всегда лучше первой.' },
+    { min: 100, title: 'Августовский гений!',  note: '10 из 10 — ты знаешь август лучше всех!' },
+    { min: 75,  title: 'Отличный результат',   note: 'Ты отлично помнишь август! Ещё чуть-чуть до совершенства.' },
+    { min: 50,  title: 'Хороший уровень',      note: 'Половина августа у тебя в кармане. Есть что вспомнить!' },
+    { min: 0,   title: 'Август прошёл мимо',   note: 'В следующем месяце будь внимательнее к событиям!' },
   ]);
 
   /** Подписи всплывающих уведомлений во время игры. */
   const TOASTS = Object.freeze({
     correct: 'Верно! +1',
     wrong:   'Неверно — правильный ответ подсвечен',
-    timeout: 'Время вышло — правильный ответ подсвечен',
+    timeout: 'Время! Правильный ответ подсвечен',
   });
 
   const QUESTION_BANK = Object.freeze([
-    { text: 'Какой год считается годом основания компании EOS Group?',
-      options: ['1974', '1983', '1991', '2002'], correctIndex: 0 },
-    { text: 'Что означает аббревиатура CRM в корпоративных системах?',
-      options: ['Customer Relationship Management', 'Corporate Resource Model', 'Central Risk Monitor', 'Client Rating Method'], correctIndex: 0 },
-    { text: 'Какой документ фиксирует правила обработки персональных данных в организации?',
-      options: ['Политика обработки ПДн', 'Штатное расписание', 'Учётная политика', 'Табель учёта'], correctIndex: 0 },
-    { text: 'Что такое KPI?',
-      options: ['Ключевой показатель эффективности', 'Категория интеллекта', 'Класс приоритета', 'Кодекс правил'], correctIndex: 0 },
-    { text: 'Какая функция Excel суммирует значения по условию?',
-      options: ['СУММЕСЛИ', 'ВПР', 'СЦЕПИТЬ', 'СЧЁТЗ'], correctIndex: 0 },
-    { text: 'Что означает дедлайн в проектной работе?',
-      options: ['Крайний срок', 'Первый этап', 'Бюджет', 'Список задач'], correctIndex: 0 },
-    { text: 'Какой инструмент используют для визуализации сроков проекта?',
-      options: ['Диаграмма Ганта', 'Круговая диаграмма', 'Гистограмма', 'Спарклайн'], correctIndex: 0 },
-    { text: 'Что такое онбординг?',
-      options: ['Адаптация нового сотрудника', 'Списание техники', 'Годовой отчёт', 'Инвентаризация'], correctIndex: 0 },
-    { text: 'Сколько минут в трёх с половиной часах?',
-      options: ['210', '180', '240', '195'], correctIndex: 0 },
-    { text: 'Какой протокол защищает передачу данных в браузере?',
-      options: ['HTTPS', 'FTP', 'SMTP', 'POP3'], correctIndex: 0 },
-    { text: 'Что означает термин «эскалация» в поддержке клиентов?',
-      options: ['Передача на более высокий уровень', 'Закрытие обращения', 'Отказ клиенту', 'Скидка'], correctIndex: 0 },
-    { text: 'Что показывает конверсия в воронке продаж?',
-      options: ['Долю перешедших на следующий этап', 'Общую выручку', 'Число сотрудников', 'Срок хранения данных'], correctIndex: 0 },
+    { text: 'Здесь будет твой вопрос 1',
+      options: ['Вариант А', 'Вариант Б', 'Вариант В', 'Вариант Г'], correctIndex: 0 },
+    { text: 'Здесь будет твой вопрос 2',
+      options: ['Вариант А', 'Вариант Б', 'Вариант В', 'Вариант Г'], correctIndex: 0 },
+    { text: 'Здесь будет твой вопрос 3',
+      options: ['Вариант А', 'Вариант Б', 'Вариант В', 'Вариант Г'], correctIndex: 0 },
+    { text: 'Здесь будет твой вопрос 4',
+      options: ['Вариант А', 'Вариант Б', 'Вариант В', 'Вариант Г'], correctIndex: 0 },
+    { text: 'Здесь будет твой вопрос 5',
+      options: ['Вариант А', 'Вариант Б', 'Вариант В', 'Вариант Г'], correctIndex: 0 },
+    { text: 'Здесь будет твой вопрос 6',
+      options: ['Вариант А', 'Вариант Б', 'Вариант В', 'Вариант Г'], correctIndex: 0 },
+    { text: 'Здесь будет твой вопрос 7',
+      options: ['Вариант А', 'Вариант Б', 'Вариант В', 'Вариант Г'], correctIndex: 0 },
+    { text: 'Здесь будет твой вопрос 8',
+      options: ['Вариант А', 'Вариант Б', 'Вариант В', 'Вариант Г'], correctIndex: 0 },
+    { text: 'Здесь будет твой вопрос 9',
+      options: ['Вариант А', 'Вариант Б', 'Вариант В', 'Вариант Г'], correctIndex: 0 },
+    { text: 'Здесь будет твой вопрос 10',
+      options: ['Вариант А', 'Вариант Б', 'Вариант В', 'Вариант Г'], correctIndex: 0 },
   ]);
 
   const DEMO_RESULTS = Object.freeze([
-    { id: 'demo-01', name: 'Максимов Никита',     score: 8, seconds: 161 },
-    { id: 'demo-02', name: 'Карапетян Милена',    score: 8, seconds: 184 },
-    { id: 'demo-03', name: 'Белов Дмитрий',       score: 7, seconds: 178 },
-    { id: 'demo-04', name: 'Насибян Евгений',     score: 7, seconds: 202 },
-    { id: 'demo-05', name: 'Синельников Дмитрий', score: 6, seconds: 167 },
-    { id: 'demo-06', name: 'Умярова Алеся',       score: 6, seconds: 191 },
-    { id: 'demo-07', name: 'Галимов Раиль',       score: 6, seconds: 215 },
-    { id: 'demo-08', name: 'Комиссаров Иван',     score: 5, seconds: 172 },
-    { id: 'demo-09', name: 'Попова Яна',          score: 5, seconds: 198 },
-    { id: 'demo-10', name: 'Сафонов Илья',        score: 4, seconds: 220 },
+    { id: 'demo-01', name: 'Максимов Никита',     score: 10, seconds: 210 },
+    { id: 'demo-02', name: 'Карапетян Милена',    score: 9,  seconds: 224 },
+    { id: 'demo-03', name: 'Белов Дмитрий',       score: 9,  seconds: 238 },
+    { id: 'demo-04', name: 'Насибян Евгений',     score: 8,  seconds: 202 },
+    { id: 'demo-05', name: 'Синельников Дмитрий', score: 8,  seconds: 217 },
+    { id: 'demo-06', name: 'Умярова Алеся',       score: 7,  seconds: 191 },
+    { id: 'demo-07', name: 'Галимов Раиль',       score: 7,  seconds: 225 },
+    { id: 'demo-08', name: 'Комиссаров Иван',     score: 6,  seconds: 172 },
+    { id: 'demo-09', name: 'Попова Яна',          score: 6,  seconds: 248 },
+    { id: 'demo-10', name: 'Сафонов Илья',        score: 5,  seconds: 220 },
   ]);
 
   /* ============================================================
@@ -1121,7 +1095,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
       time:    $('#stat-time'),
       streak:  $('#stat-streak'),
       toBoard: $('#btn-to-board'),
-      restart: $('#btn-restart'),
     },
     board: {
       podium: $('#podium'),
@@ -1216,13 +1189,12 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   }
 
   function buildQuiz() {
-    return shuffle(QUESTION_BANK)
-      .slice(0, CONFIG.questionsPerGame)
-      .map((item) => {
-        const correctText = item.options[item.correctIndex];
-        const options     = shuffle(item.options);
-        return { text: item.text, options, correctIndex: options.indexOf(correctText) };
-      });
+    // Без перемешивания — все 10 вопросов в исходном порядке
+    return QUESTION_BANK.map((item) => {
+      const correctText = item.options[item.correctIndex];
+      const options     = shuffle(item.options);
+      return { text: item.text, options, correctIndex: options.indexOf(correctText) };
+    });
   }
 
   function setNameError(visible) {
@@ -1542,8 +1514,10 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     // Пьедестал: топ-3
     dom.board.podium.innerHTML = buildPodiumHtml(all.slice(0, CONFIG.podiumSize), isMine);
     
-    // Таблица: места 4–10
-    const rest = all.slice(CONFIG.podiumSize, CONFIG.boardSize);
+    // Таблица: все остальные (с 4-го места и далее)
+    const rest = CONFIG.boardSize > 0 
+      ? all.slice(CONFIG.podiumSize, CONFIG.boardSize)
+      : all.slice(CONFIG.podiumSize);
     
     let html = rest
       .map((entry, offset) => boardRowHtml(entry, CONFIG.podiumSize + offset, isMine(entry)))
@@ -1628,7 +1602,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     });
 
     dom.result.toBoard.addEventListener('click', () => renderLeaderboard(state.lastResultId));
-    dom.result.restart.addEventListener('click', () => showScreen('start'));
     dom.board.back.addEventListener('click', () => showScreen('start'));
 
     document.addEventListener('keydown', (event) => {
