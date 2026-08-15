@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Викторина EOS — Август 2026</title>
+<title>Викторина месяца — Своя игра</title>
 
 <!-- Шрифты: Unbounded (акцентный) + Montserrat (основной) -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/unbounded/500.css">
@@ -18,25 +18,9 @@
 
 <style>
 /* ============================================================
-   ВИКТОРИНА EOS · АВГУСТ 2026 · DESIGN v3 · COPY v3
-   ------------------------------------------------------------
-   01. Дизайн-токены
-   02. База, типографика, фон
-   03. Фоновые орбы
-   04. Шапка (hero)
-   05. Каркас и экраны
-   06. Карточки
-   07. Стартовый экран
-   08. Экран вопроса (таймер-кольцо, тост, сегменты)
-   09. Экран результата (кольцо точности, оценка)
-   10. Экран рейтинга (пьедестал + таблица)
-   11. Конфетти
-   12. Анимации
-   13. Адаптивность
-   14. Доступность
+   ВИКТОРИНА месяца · СВОЯ ИГРА · DESIGN v6
    ============================================================ */
 
-/* ---------- 01. Дизайн-токены ---------- */
 :root {
   --red-900: #6E0A11;
   --red-700: #A5121B;
@@ -73,7 +57,6 @@
   --ease: cubic-bezier(.22, .61, .36, 1);
 }
 
-/* ---------- 02. База, типографика, фон ---------- */
 *, *::before, *::after { box-sizing: border-box; }
 
 body {
@@ -86,7 +69,6 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Тонкая сетка на фоне верхней части страницы */
 body::before {
   content: '';
   position: fixed;
@@ -118,7 +100,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   text-transform: uppercase;
 }
 
-/* ---------- 03. Фоновые орбы ---------- */
 .orb {
   position: fixed;
   z-index: 0;
@@ -140,7 +121,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   animation: orb-drift-b 22s var(--ease) infinite;
 }
 
-/* ---------- 04. Шапка (hero) ---------- */
 .hero {
   position: relative;
   padding: 52px 20px 78px;
@@ -197,30 +177,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   opacity: .78;
 }
 
-/* Мини-статистика турнира */
-.hero__chips {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 28px;
-}
-.chip {
-  padding: 10px 18px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, .12);
-  border: 1px solid rgba(255, 255, 255, .2);
-  backdrop-filter: blur(6px);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  transition: transform .3s var(--ease), background .3s var(--ease);
-}
-.chip:hover { transform: translateY(-3px); background: rgba(255, 255, 255, .2); }
-.chip b { color: var(--gold); margin-right: 7px; font-size: 12.5px; }
-
-/* ---------- 05. Каркас и экраны ---------- */
 .page {
   position: relative;
   z-index: 2;
@@ -237,7 +193,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   animation: rise .55s var(--ease) both;
 }
 
-/* ---------- 06. Карточки ---------- */
 .card {
   padding: 36px;
   background: var(--card);
@@ -266,8 +221,238 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   color: var(--ink-muted);
 }
 
-/* ---------- 07. Стартовый экран ---------- */
-.rules { margin: 0 0 30px; padding: 0; list-style: none; counter-reset: step; }
+/* ---------- Кнопка-подсказка (фиксированная) ---------- */
+.help-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1.5px solid var(--line);
+  box-shadow: var(--shadow);
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--red-600);
+  cursor: pointer;
+  transition: all .3s var(--ease);
+  display: grid;
+  place-items: center;
+}
+.help-btn:hover {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-lift);
+  border-color: var(--red-400);
+  background: var(--red-soft);
+}
+
+/* ---------- Модальное окно ---------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0, 0, 0, .5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn .3s var(--ease);
+}
+.modal-overlay.is-open {
+  display: flex;
+}
+.modal {
+  max-width: 480px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lift);
+  padding: 32px;
+  animation: modalIn .4s var(--ease);
+}
+.modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.modal__title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+}
+.modal__close {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink-muted);
+  cursor: pointer;
+  transition: all .3s var(--ease);
+  display: grid;
+  place-items: center;
+}
+.modal__close:hover {
+  background: var(--red-soft);
+  color: var(--red-600);
+  border-color: var(--red-400);
+}
+.modal__section {
+  margin-bottom: 20px;
+}
+.modal__section:last-child {
+  margin-bottom: 0;
+}
+.modal__section-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--red-600);
+  margin-bottom: 6px;
+  letter-spacing: .02em;
+}
+.modal__section-text {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.65;
+  color: var(--ink-soft);
+}
+
+/* ---------- Навигация ---------- */
+.nav-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  background: #fff;
+  border-radius: 999px;
+  padding: 6px;
+  box-shadow: var(--shadow);
+}
+.nav-tab {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  transition: all .3s var(--ease);
+  text-align: center;
+}
+.nav-tab:hover {
+  background: var(--red-soft);
+  color: var(--red-600);
+}
+.nav-tab.is-active {
+  background: var(--gradient-red);
+  color: #fff;
+  box-shadow: var(--shadow-red);
+}
+
+/* ---------- Вкладки месяцев ---------- */
+.months-tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.month-tab {
+  flex: 1;
+  position: relative;
+  padding: 16px;
+  border-radius: 18px;
+  background: #fff;
+  border: 1.5px solid var(--line);
+  text-align: center;
+  transition: all .3s var(--ease);
+  cursor: pointer;
+}
+.month-tab:hover:not(.is-locked) {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lift);
+  border-color: var(--red-400);
+}
+.month-tab.is-active {
+  background: var(--gradient-red);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: var(--shadow-red);
+}
+.month-tab.is-locked {
+  opacity: .6;
+  cursor: not-allowed;
+}
+.month-tab__name {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.month-tab__year {
+  font-size: 11px;
+  font-weight: 600;
+  opacity: .7;
+  margin-top: 4px;
+}
+.month-tab__status {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.month-tab.is-active .month-tab__status {
+  background: rgba(255, 255, 255, .2);
+  color: #fff;
+}
+.month-tab.is-locked .month-tab__status {
+  background: #EDEDF2;
+  color: var(--ink-muted);
+}
+
+.month-tab__tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  padding: 10px 16px;
+  background: var(--ink);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 10px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: all .3s var(--ease);
+  z-index: 10;
+}
+.month-tab__tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--ink);
+}
+.month-tab.is-locked:hover .month-tab__tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ---------- Старт ---------- */
+.rules { margin: 0 0 30px; padding: 0; list-style: none; }
 .rules__item {
   display: flex;
   gap: 16px;
@@ -336,7 +521,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   box-shadow: var(--shadow-red);
   transition: transform .35s var(--ease), box-shadow .35s var(--ease), background .35s var(--ease);
 }
-/* Блик, пробегающий по кнопке */
 .btn::after {
   content: '';
   position: absolute;
@@ -359,7 +543,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .btn--ghost::after { background: linear-gradient(100deg, transparent, rgba(224, 27, 36, .08), transparent); }
 .btn--ghost:hover { background: var(--red-soft); box-shadow: 0 14px 30px rgba(208, 26, 34, .13); }
 
-/* ---------- 08. Экран вопроса ---------- */
+/* ---------- Вопрос ---------- */
 .quiz-bar {
   display: flex;
   justify-content: space-between;
@@ -370,7 +554,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 .quiz-bar__counter { opacity: .85; }
 
-/* Таймер-кольцо */
 .timer {
   position: relative;
   display: grid;
@@ -455,7 +638,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 .option__text { padding-right: 30px; }
 
-/* Иконка результата (✓ / ✕) */
 .option__icon {
   position: absolute;
   top: 16px; right: 16px;
@@ -492,7 +674,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   color: var(--ink-muted);
 }
 
-/* Всплывающий тост обратной связи */
 .toast {
   position: absolute;
   top: 12px; left: 50%;
@@ -514,7 +695,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .toast--fail { background: var(--red-500);  box-shadow: 0 10px 24px rgba(224, 27, 36, .35); }
 .toast--warn { background: var(--ink);      box-shadow: 0 10px 24px rgba(0, 0, 0, .25); }
 
-/* Сегментированный прогресс: зелёный — верно, красный — ошибка */
 .progress { display: flex; gap: 6px; margin-top: 24px; }
 .progress__seg {
   flex: 1;
@@ -530,7 +710,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   animation: seg-pulse 1.6s infinite;
 }
 
-/* ---------- 09. Экран результата ---------- */
+/* ---------- Результат ---------- */
 .result {
   padding: 42px 34px;
   color: #fff;
@@ -549,7 +729,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   text-align: left;
 }
 
-/* Кольцо точности */
 .acc { position: relative; width: 150px; height: 150px; }
 .acc svg { position: absolute; inset: 0; transform: rotate(-90deg); }
 .acc circle { fill: none; stroke-width: 9; stroke-linecap: round; }
@@ -598,7 +777,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   opacity: .82;
 }
 
-/* ---------- 10. Экран рейтинга: пьедестал ---------- */
+/* ---------- Пьедестал ---------- */
 .podium {
   display: flex;
   gap: 14px;
@@ -684,7 +863,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .podium__col--2 .podium__bar { height: 70px;  background: linear-gradient(180deg, #C9CDD6, #EDEFF3); }
 .podium__col--3 .podium__bar { height: 48px;  background: linear-gradient(180deg, #E0A874, #F3DCC8); }
 
-/* ---------- 10б. Экран рейтинга: таблица ---------- */
+/* ---------- Таблица ---------- */
 .board { margin-top: 30px; }
 .board__row {
   display: grid;
@@ -722,7 +901,40 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   text-transform: uppercase;
 }
 
-/* ---------- 11. Конфетти ---------- */
+/* ---------- Архив ---------- */
+.archive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+.archive-month {
+  padding: 20px;
+  text-align: center;
+  background: #fff;
+  border: 1.5px solid var(--line);
+  border-radius: 18px;
+  cursor: pointer;
+  transition: all .3s var(--ease);
+}
+.archive-month:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lift);
+  border-color: var(--red-400);
+}
+.archive-month__name {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.archive-month__year {
+  font-size: 11px;
+  color: var(--ink-muted);
+  margin-top: 4px;
+}
+
+/* ---------- Конфетти ---------- */
 .confetti {
   position: fixed;
   top: -20px;
@@ -732,7 +944,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   animation: confetti-fall 3s linear forwards;
 }
 
-/* ---------- 12. Анимации ---------- */
+/* ---------- Анимации ---------- */
 @keyframes rise { from { opacity: 0; transform: translateY(22px); } }
 @keyframes pulse { 50% { transform: scale(1.06); } }
 @keyframes seg-pulse { 50% { opacity: .5; } }
@@ -750,14 +962,31 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   45%  { transform: scale(1.03); }
   100% { transform: scale(1); }
 }
+@keyframes fadeIn { from { opacity: 0; } }
+@keyframes modalIn { from { opacity: 0; transform: translateY(20px); } }
 
-/* ---------- 13. Адаптивность ---------- */
+/* ---------- Адаптивность ---------- */
 @media (max-width: 560px) {
   .hero { padding: 42px 20px 64px; }
   .card { padding: 26px; }
   .quiz-body { padding: 26px 22px 28px; }
   .quiz-bar { padding: 18px 20px; }
   .result { padding: 32px 22px; }
+
+  .help-btn {
+    top: 12px;
+    right: 12px;
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+
+  .nav-tabs { gap: 4px; padding: 4px; }
+  .nav-tab { padding: 10px 8px; font-size: 9px; }
+
+  .months-tabs { gap: 8px; }
+  .month-tab { padding: 12px; }
+  .month-tab__name { font-size: 14px; }
 
   .options { grid-template-columns: 1fr; gap: 12px; }
   .option {
@@ -790,7 +1019,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   }
 }
 
-/* ---------- 14. Доступность ---------- */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: .01ms !important;
@@ -805,30 +1033,59 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 <div class="orb orb--left"></div>
 <div class="orb orb--right"></div>
 
+<!-- Кнопка-подсказка (фиксированная) -->
+<button class="help-btn" id="help-btn" aria-label="Помощь">?</button>
+
+<!-- Модальное окно -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal__header">
+      <h3 class="modal__title">Как устроена викторина</h3>
+      <button class="modal__close" id="modal-close" aria-label="Закрыть">✕</button>
+    </div>
+    <div class="modal__section">
+      <div class="modal__section-title">Викторина месяца</div>
+      <div class="modal__section-text">Здесь ты проходишь викторину текущего месяца. Заполни имя, ответь на вопросы и заработай очки в общий рейтинг. Засчитывается только первое прохождение.</div>
+    </div>
+    <div class="modal__section">
+      <div class="modal__section-title">Общий рейтинг</div>
+      <div class="modal__section-text">Сумма твоих очков за все месяцы. Чем больше участвуешь, тем выше поднимаешься.</div>
+    </div>
+    <div class="modal__section">
+      <div class="modal__section-title">Архив</div>
+      <div class="modal__section-text">Здесь хранятся рейтинги прошедших викторин. Загляни, чтобы вспомнить, кто был лучшим в прошлые месяцы.</div>
+    </div>
+  </div>
+</div>
+
 <header class="hero">
   <div class="hero__ring hero__ring--lg"></div>
   <div class="hero__ring hero__ring--sm"></div>
 
-  <div class="hero__badge"><span class="caps">Своя игра EOS · Август 2026</span></div>
-  <h1 class="hero__title">ВИКТОРИНА <span class="hero__title-accent">АВГУСТА</span></h1>
-  <p class="hero__tagline">10 вопросов об исторических событиях августа — проверь, насколько хорошо ты знаешь этот месяц</p>
-
-  <div class="hero__chips">
-    <div class="chip"><b>10</b>вопросов</div>
-    <div class="chip"><b>25</b>секунд на вопрос</div>
-    <div class="chip"><b>рейтинг</b>месяца</div>
-  </div>
+  <div class="hero__badge"><span class="caps">Своя игра EOS · 2026</span></div>
+  <h1 class="hero__title">ВИКТОРИНА <span class="hero__title-accent">МЕСЯЦА</span></h1>
+  <p class="hero__tagline">Отвечай на вопросы месяца и зарабатывай очки в общий рейтинг</p>
 
   <div class="hero__wave"></div>
 </header>
 
 <main class="page">
 
+  <!-- ===================== НАВИГАЦИЯ ===================== -->
+  <div class="nav-tabs lift" id="nav-tabs">
+    <button class="nav-tab is-active" data-nav="quiz">Викторина месяца</button>
+    <button class="nav-tab" data-nav="overall">Общий рейтинг</button>
+    <button class="nav-tab" data-nav="archive">Архив</button>
+  </div>
+
+  <!-- ===================== ВКЛАДКИ МЕСЯЦЕВ ===================== -->
+  <div class="months-tabs" id="months-tabs"></div>
+
   <!-- ===================== СТАРТ ===================== -->
   <section class="screen is-active" data-screen="start">
-    <div class="card card--accent lift">
+    <div class="card card--accent">
       <h2 class="title">Проверь свои знания</h2>
-      <p class="subtitle">10 вопросов о событиях, которые произошли в августе. Ответь на все и займи место в рейтинге месяца.</p>
+      <p class="subtitle" id="quiz-subtitle">Ответь на вопросы месяца и займи место в рейтинге.</p>
 
       <ul class="rules">
         <li class="rules__item">
@@ -837,11 +1094,15 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
         </li>
         <li class="rules__item">
           <b class="rules__label">Шаг 2</b>
-          <span class="rules__text">Ответь на 10 вопросов об августе</span>
+          <span class="rules__text" id="rules-questions">Ответь на вопросы месяца</span>
         </li>
         <li class="rules__item">
           <b class="rules__label">Шаг 3</b>
-          <span class="rules__text">На каждый вопрос — 25 секунд</span>
+          <span class="rules__text" id="rules-time">На каждый вопрос — 25 секунд</span>
+        </li>
+        <li class="rules__item">
+          <b class="rules__label">Шаг 4</b>
+          <span class="rules__text">Вопрос нельзя пропустить — ответь или время выйдет</span>
         </li>
         <li class="rules__item">
           <b class="rules__label">Важно</b>
@@ -854,14 +1115,14 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
       <div class="actions">
         <button class="btn" id="btn-start">Начать викторину</button>
-        <button class="btn btn--ghost" id="btn-peek">Открыть рейтинг месяца</button>
+        <button class="btn btn--ghost" id="btn-month-leaderboard">Рейтинг месяца</button>
       </div>
     </div>
   </section>
 
   <!-- ===================== ВОПРОС ===================== -->
   <section class="screen" data-screen="quiz">
-    <div class="card card--flush lift">
+    <div class="card card--flush">
       <div class="quiz-bar">
         <div class="quiz-bar__counter caps">Вопрос <span id="q-number">1</span> из <span id="q-total">10</span></div>
 
@@ -891,7 +1152,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   <!-- ===================== РЕЗУЛЬТАТ ===================== -->
   <section class="screen" data-screen="result">
     <div class="stack">
-      <div class="result lift">
+      <div class="result">
         <div class="result__caption caps">Викторина завершена — вот твой результат</div>
 
         <div class="result__grid">
@@ -924,16 +1185,16 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
       </div>
 
       <div class="actions actions--flush">
-        <button class="btn" id="btn-to-board">Открыть рейтинг</button>
+        <button class="btn" id="btn-to-board">Открыть рейтинг месяца</button>
       </div>
     </div>
   </section>
 
-  <!-- ===================== РЕЙТИНГ ===================== -->
+  <!-- ===================== РЕЙТИНГ МЕСЯЦА ===================== -->
   <section class="screen" data-screen="leaderboard">
-    <div class="card lift">
-      <h2 class="title">Рейтинг августа</h2>
-      <p class="subtitle">Топ-3 на пьедестале. Все участники месяца — в таблице. При равных очках побеждает скорость.</p>
+    <div class="card">
+      <h2 class="title" id="leaderboard-title">Рейтинг месяца</h2>
+      <p class="subtitle">Топ-3 на пьедестале. Все участники — в таблице. При равных очках побеждает скорость.</p>
 
       <div class="podium" id="podium"></div>
 
@@ -948,7 +1209,45 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
       </div>
 
       <div class="actions">
-        <button class="btn btn--ghost" id="btn-back">На главную</button>
+        <button class="btn btn--ghost" id="btn-back-from-leaderboard">Назад</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== ОБЩИЙ РЕЙТИНГ ===================== -->
+  <section class="screen" data-screen="overall">
+    <div class="card">
+      <h2 class="title">Общий рейтинг</h2>
+      <p class="subtitle">Сумма очков за все месяцы. Участвуй каждый месяц, чтобы подняться выше!</p>
+
+      <div class="podium" id="overall-podium"></div>
+
+      <div class="board">
+        <div class="board__row board__row--head">
+          <div>Место</div>
+          <div>Участник</div>
+          <div class="board__num">Очки</div>
+          <div class="board__num">Игр</div>
+        </div>
+        <div id="overall-rows"></div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn--ghost" id="btn-back-from-overall">Назад</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== АРХИВ ===================== -->
+  <section class="screen" data-screen="archive">
+    <div class="card">
+      <h2 class="title">Архив викторин</h2>
+      <p class="subtitle">Выбери месяц, чтобы посмотреть рейтинг.</p>
+
+      <div class="archive-grid" id="archive-grid"></div>
+
+      <div class="actions">
+        <button class="btn btn--ghost" id="btn-back-from-archive">Назад</button>
       </div>
     </div>
   </section>
@@ -959,90 +1258,45 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 (() => {
   'use strict';
 
-  /* ============================================================
-     01. КОНСТАНТЫ И КОНФИГУРАЦИЯ
-     ============================================================ */
-
-  const TIMEOUT = -1;                 // маркер истёкшего времени
-  const TIMER_RADIUS = 32;            // радиус кольца таймера (SVG)
+  const TIMEOUT = -1;
+  const TIMER_RADIUS = 32;
   const TIMER_C = 2 * Math.PI * TIMER_RADIUS;
-  const ACC_RADIUS = 52;              // радиус кольца точности (SVG)
+  const ACC_RADIUS = 52;
   const ACC_C = 2 * Math.PI * ACC_RADIUS;
 
-  // URL для отправки данных в Google Sheets
-  const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzcTAE5UyWP5G_Xvo2U0HsSw-TYo-72mou9PKinPlLK9takarO9qdzpfEsMzA0njxPj/exec';
+  const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwSs3bZO5rC1ioJJ4Gc5Eo2P0wRY-UsgM8sDCM3seFmAOUe5S7BeCqesjqhYlYsZaGzlg/exec';
 
-  const CONFIG = Object.freeze({
-    questionsPerGame:   10,
+  const CONFIG = {
+    questionsPerGame: 10,
     secondsPerQuestion: 25,
-    warningThreshold:   5,
-    answerRevealDelay:  950,
-    passThreshold:      75,
-    boardSize:          0, // 0 = без ограничений
-    podiumSize:         3,
-    answerLetters:      Object.freeze(['А', 'Б', 'В', 'Г']),
-    storageKey:         'eos-quiz-august-2026',
-    namePattern:        /^[А-Яа-яЁёA-Za-z][А-Яа-яЁёA-Za-z-]*\s+[А-Яа-яЁёA-Za-z][А-Яа-яЁёA-Za-z-]*$/,
-  });
+    warningThreshold: 5,
+    answerRevealDelay: 950,
+    passThreshold: 75,
+    podiumSize: 3,
+    answerLetters: ['А', 'Б', 'В', 'Г'],
+    namePattern: /^[А-Яа-яЁёA-Za-z][А-Яа-яЁёA-Za-z-]*\s+[А-Яа-яЁёA-Za-z][А-Яа-яЁёA-Za-z-]*$/,
+  };
 
-  /** Текстовые оценки результата (по % точности, сверху вниз). */
   const GRADES = Object.freeze([
-    { min: 100, title: 'Августовский гений!',  note: '10 из 10 — ты знаешь август лучше всех!' },
-    { min: 75,  title: 'Отличный результат',   note: 'Ты отлично помнишь август! Ещё чуть-чуть до совершенства.' },
-    { min: 50,  title: 'Хороший уровень',      note: 'Половина августа у тебя в кармане. Есть что вспомнить!' },
-    { min: 0,   title: 'Август прошёл мимо',   note: 'В следующем месяце будь внимательнее к событиям!' },
+    { min: 100, title: 'Идеально!', note: 'Все ответы верные — ты отлично знаешь этот месяц!' },
+    { min: 75,  title: 'Отличный результат', note: 'Совсем чуть-чуть до совершенства!' },
+    { min: 50,  title: 'Хороший уровень', note: 'Половина месяца у тебя в кармане.' },
+    { min: 0,   title: 'Будь внимательнее', note: 'В следующем месяце точно получится лучше!' },
   ]);
 
-  /** Подписи всплывающих уведомлений во время игры. */
   const TOASTS = Object.freeze({
     correct: 'Верно! +1',
-    wrong:   'Неверно — правильный ответ подсвечен',
+    wrong: 'Неверно — правильный ответ подсвечен',
     timeout: 'Время! Правильный ответ подсвечен',
   });
 
-  const QUESTION_BANK = Object.freeze([
-    { text: 'Здесь будет твой вопрос 1',
-      options: ['Вариант А', 'Вариант Б', 'Вариант В', 'Вариант Г'], correctIndex: 0 },
-    { text: 'Здесь будет твой вопрос 2',
-      options: ['Вариант А', 'Вариант Б', 'Вариант В', 'Вариант Г'], correctIndex: 0 },
-    { text: 'Здесь будет твой вопрос 3',
-      options: ['Вариант А', 'Вариант Б', 'Вариант В', 'Вариант Г'], correctIndex: 0 },
-    { text: 'Здесь будет твой вопрос 4',
-      options: ['Вариант А', 'Вариант Б', 'Вариант В', 'Вариант Г'], correctIndex: 0 },
-    { text: 'Здесь будет твой вопрос 5',
-      options: ['Вариант А', 'Вариант Б', 'Вариант В', 'Вариант Г'], correctIndex: 0 },
-    { text: 'Здесь будет твой вопрос 6',
-      options: ['Вариант А', 'Вариант Б', 'Вариант В', 'Вариант Г'], correctIndex: 0 },
-    { text: 'Здесь будет твой вопрос 7',
-      options: ['Вариант А', 'Вариант Б', 'Вариант В', 'Вариант Г'], correctIndex: 0 },
-    { text: 'Здесь будет твой вопрос 8',
-      options: ['Вариант А', 'Вариант Б', 'Вариант В', 'Вариант Г'], correctIndex: 0 },
-    { text: 'Здесь будет твой вопрос 9',
-      options: ['Вариант А', 'Вариант Б', 'Вариант В', 'Вариант Г'], correctIndex: 0 },
-    { text: 'Здесь будет твой вопрос 10',
-      options: ['Вариант А', 'Вариант Б', 'Вариант В', 'Вариант Г'], correctIndex: 0 },
-  ]);
-
-  const DEMO_RESULTS = Object.freeze([
-    { id: 'demo-01', name: 'Максимов Никита',     score: 10, seconds: 210 },
-    { id: 'demo-02', name: 'Карапетян Милена',    score: 9,  seconds: 224 },
-    { id: 'demo-03', name: 'Белов Дмитрий',       score: 9,  seconds: 238 },
-    { id: 'demo-04', name: 'Насибян Евгений',     score: 8,  seconds: 202 },
-    { id: 'demo-05', name: 'Синельников Дмитрий', score: 8,  seconds: 217 },
-    { id: 'demo-06', name: 'Умярова Алеся',       score: 7,  seconds: 191 },
-    { id: 'demo-07', name: 'Галимов Раиль',       score: 7,  seconds: 225 },
-    { id: 'demo-08', name: 'Комиссаров Иван',     score: 6,  seconds: 172 },
-    { id: 'demo-09', name: 'Попова Яна',          score: 6,  seconds: 248 },
-    { id: 'demo-10', name: 'Сафонов Илья',        score: 5,  seconds: 220 },
-  ]);
-
-  /* ============================================================
-     02. СОСТОЯНИЕ ИГРЫ
-     ============================================================ */
-
   const state = {
-    player: '',
+    settings: null,
+    months: [],
+    activeMonth: null,
+    nextMonth: null,
     questions: [],
+    player: '',
     index: 0,
     score: 0,
     spentSeconds: 0,
@@ -1050,118 +1304,179 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     timerId: null,
     locked: false,
     selected: null,
-    history: [],          // true/false по каждому вопросу → сегменты прогресса
+    history: [],
     streak: 0,
     bestStreak: 0,
-    lastResultId: null,
+    answers: [],
     toastId: null,
-    answers: [],          // детальные ответы для отправки в Google Sheets
   };
 
-  /* ============================================================
-     03. КЭШ DOM-ЭЛЕМЕНТОВ
-     ============================================================ */
-
-  const $  = (selector, scope = document) => scope.querySelector(selector);
+  const $ = (selector, scope = document) => scope.querySelector(selector);
   const $$ = (selector, scope = document) => [...scope.querySelectorAll(selector)];
 
   const dom = {
     screens: $$('.screen'),
+    navTabs: $$('.nav-tab'),
+    monthsTabs: $('#months-tabs'),
+    helpBtn: $('#help-btn'),
+    modalOverlay: $('#modal-overlay'),
+    modalClose: $('#modal-close'),
     start: {
-      name:      $('#player-name'),
+      subtitle: $('#quiz-subtitle'),
+      rulesQuestions: $('#rules-questions'),
+      rulesTime: $('#rules-time'),
+      name: $('#player-name'),
       nameError: $('#name-error'),
-      start:     $('#btn-start'),
-      peek:      $('#btn-peek'),
+      start: $('#btn-start'),
+      monthLeaderboard: $('#btn-month-leaderboard'),
     },
     quiz: {
-      number:     $('#q-number'),
-      total:      $('#q-total'),
-      timer:      $('#timer-box'),
-      timerRing:  $('#timer-ring'),
+      number: $('#q-number'),
+      total: $('#q-total'),
+      timer: $('#timer-box'),
+      timerRing: $('#timer-ring'),
       timerValue: $('#timer-value'),
-      toast:      $('#toast'),
-      question:   $('#question-text'),
-      options:    $('#options'),
-      progress:   $('#progress'),
+      toast: $('#toast'),
+      question: $('#question-text'),
+      options: $('#options'),
+      progress: $('#progress'),
     },
     result: {
       accFill: $('#acc-fill'),
-      accNum:  $('#acc-num'),
-      grade:   $('#res-grade'),
-      note:    $('#res-note'),
-      name:    $('#res-name'),
-      score:   $('#res-score'),
-      total:   $('#res-total'),
-      time:    $('#stat-time'),
-      streak:  $('#stat-streak'),
+      accNum: $('#acc-num'),
+      grade: $('#res-grade'),
+      note: $('#res-note'),
+      name: $('#res-name'),
+      score: $('#res-score'),
+      total: $('#res-total'),
+      time: $('#stat-time'),
+      streak: $('#stat-streak'),
       toBoard: $('#btn-to-board'),
     },
-    board: {
+    leaderboard: {
+      title: $('#leaderboard-title'),
       podium: $('#podium'),
-      rows:   $('#board-rows'),
-      back:   $('#btn-back'),
+      rows: $('#board-rows'),
+      back: $('#btn-back-from-leaderboard'),
+    },
+    overall: {
+      podium: $('#overall-podium'),
+      rows: $('#overall-rows'),
+      back: $('#btn-back-from-overall'),
+    },
+    archive: {
+      grid: $('#archive-grid'),
+      back: $('#btn-back-from-archive'),
     },
   };
 
-  /* ============================================================
-     04. УТИЛИТЫ
-     ============================================================ */
-
-  function shuffle(list) {
-    const copy = [...list];
-    for (let i = copy.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [copy[i], copy[j]] = [copy[j], copy[i]];
-    }
-    return copy;
-  }
-
-  const formatTime = (totalSeconds) =>
-    `${Math.floor(totalSeconds / 60)}:${String(totalSeconds % 60).padStart(2, '0')}`;
-
-  const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => (
-    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]
-  ));
-
-  const getInitials = (name) =>
-    name.split(/\s+/).map((word) => word[0]).join('').slice(0, 2).toUpperCase();
+  const formatTime = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+  const escapeHtml = (v) => String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const getInitials = (name) => name.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
 
   function capitalizeName(raw) {
-    return raw
-      .split(/\s+/)
-      .slice(0, 2)
-      .map((word) => word[0].toUpperCase() + word.slice(1).toLowerCase())
-      .join(' ');
+    return raw.split(/\s+/).slice(0, 2).map(w => w[0].toUpperCase() + w.slice(1).toLowerCase()).join(' ');
   }
 
-  /** Плавный счётчик с произвольным форматом вывода. */
-  function animateNumber(element, target, { duration = 700, format = (v) => v } = {}) {
-    const startedAt = performance.now();
+  function animateNumber(el, target, { duration = 700, format = (v) => v } = {}) {
+    const start = performance.now();
     const tick = (now) => {
-      const progress = Math.min((now - startedAt) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      element.textContent = format(Math.round(target * eased));
-      if (progress < 1) requestAnimationFrame(tick);
+      const p = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = format(Math.round(target * eased));
+      if (p < 1) requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);
   }
 
-  /* ============================================================
-     05. НАВИГАЦИЯ МЕЖДУ ЭКРАНАМИ
-     ============================================================ */
-
   function showScreen(name) {
-    dom.screens.forEach((screen) =>
-      screen.classList.toggle('is-active', screen.dataset.screen === name));
+    dom.screens.forEach(s => s.classList.toggle('is-active', s.dataset.screen === name));
     window.scrollTo(0, 0);
   }
 
-  const isScreenActive = (name) =>
-    document.querySelector(`[data-screen="${name}"]`)?.classList.contains('is-active') ?? false;
+  function setActiveNav(tab) {
+    dom.navTabs.forEach(t => t.classList.toggle('is-active', t.dataset.nav === tab));
+  }
 
-  /* ============================================================
-     06. СТАРТ ИГРЫ
-     ============================================================ */
+  function toggleQuizElements(show) {
+    dom.monthsTabs.style.display = show ? 'flex' : 'none';
+  }
+
+  function openModal() {
+    dom.modalOverlay.classList.add('is-open');
+  }
+
+  function closeModal() {
+    dom.modalOverlay.classList.remove('is-open');
+  }
+
+  async function fetchFromSheets(action, params = '') {
+    try {
+      const url = `${GOOGLE_SHEETS_URL}?action=${action}${params}`;
+      const response = await fetch(url);
+      return await response.json();
+    } catch (error) {
+      console.error(`Ошибка загрузки (${action}):`, error);
+      return null;
+    }
+  }
+
+  async function initApp() {
+    try {
+      state.settings = await fetchFromSheets('settings');
+      if (state.settings) {
+        CONFIG.questionsPerGame = parseInt(state.settings['Вопросов в игре']) || 10;
+        CONFIG.secondsPerQuestion = parseInt(state.settings['Секунд на вопрос']) || 25;
+      }
+    } catch(e) {}
+
+    try {
+      state.months = await fetchFromSheets('months') || [];
+    } catch(e) { state.months = []; }
+
+    state.activeMonth = state.months.find(m => m.status === 'Активен') || { name: 'Август', year: 2026, status: 'Активен' };
+    state.nextMonth = state.months.find(m => m.status === 'Закрыт') || { name: 'Сентябрь', year: 2026, status: 'Закрыт' };
+
+    try {
+      state.questions = await fetchFromSheets('questions', `&month=${encodeURIComponent(state.activeMonth.name)}`) || [];
+    } catch(e) { state.questions = []; }
+
+    if (state.questions.length === 0) {
+      console.error('❌ Вопросы не загрузились из Google Sheets!');
+      dom.quiz.question.textContent = 'Вопросы не загрузились. Проверьте таблицу.';
+      return;
+    }
+
+    CONFIG.questionsPerGame = state.questions.length;
+    dom.quiz.total.textContent = CONFIG.questionsPerGame;
+    dom.result.total.textContent = `/${CONFIG.questionsPerGame}`;
+
+    updateMonthsTabs();
+    updateStartScreen();
+  }
+
+  function updateMonthsTabs() {
+    const months = [state.activeMonth, state.nextMonth].filter(Boolean);
+    dom.monthsTabs.innerHTML = months.map(m => {
+      const isActive = m.status === 'Активен';
+      const isLocked = m.status === 'Закрыт';
+      return `
+        <div class="month-tab ${isActive ? 'is-active' : ''} ${isLocked ? 'is-locked' : ''}">
+          <div class="month-tab__name">${escapeHtml(m.name)}</div>
+          <div class="month-tab__year">${escapeHtml(String(m.year))}</div>
+          <div class="month-tab__status">${isActive ? 'Активна' : '🔒'}</div>
+          ${isLocked ? '<div class="month-tab__tooltip">Викторина станет доступна в следующем месяце</div>' : ''}
+        </div>`;
+    }).join('');
+  }
+
+  function updateStartScreen() {
+    if (state.activeMonth) {
+      const monthName = state.activeMonth.name;
+      dom.start.subtitle.textContent = `Ответь на вопросы месяца и займи место в рейтинге ${monthName.toLowerCase()}.`;
+      dom.start.rulesTime.textContent = `На каждый вопрос — ${CONFIG.secondsPerQuestion} секунд`;
+    }
+  }
 
   function startGame() {
     const rawName = dom.start.name.value.trim();
@@ -1172,112 +1487,86 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
       return;
     }
 
-    state.player       = capitalizeName(rawName);
-    state.questions    = buildQuiz();
-    state.index        = 0;
-    state.score        = 0;
+    state.player = capitalizeName(rawName);
+    state.index = 0;
+    state.score = 0;
     state.spentSeconds = 0;
-    state.history      = [];
-    state.streak       = 0;
-    state.bestStreak   = 0;
-    state.answers      = [];
+    state.history = [];
+    state.streak = 0;
+    state.bestStreak = 0;
+    state.answers = [];
 
-    dom.quiz.total.textContent = CONFIG.questionsPerGame;
     buildProgressSegments();
     showScreen('quiz');
     renderQuestion();
   }
 
-  function buildQuiz() {
-    // Без перемешивания — все 10 вопросов в исходном порядке
-    return QUESTION_BANK.map((item) => {
-      const correctText = item.options[item.correctIndex];
-      const options     = shuffle(item.options);
-      return { text: item.text, options, correctIndex: options.indexOf(correctText) };
-    });
-  }
-
-  function setNameError(visible) {
-    dom.start.name.classList.remove('field--invalid');
-    if (visible) {
-      void dom.start.name.offsetWidth; // перезапуск анимации shake
-      dom.start.name.classList.add('field--invalid');
-    }
-    dom.start.nameError.classList.toggle('is-visible', visible);
-  }
-
-  /* ============================================================
-     07. ОТРИСОВКА ВОПРОСА
-     ============================================================ */
-
   function renderQuestion() {
     const question = state.questions[state.index];
+    if (!question) {
+      finishGame();
+      return;
+    }
 
-    state.locked   = false;
+    state.locked = false;
     state.selected = null;
 
-    dom.quiz.number.textContent   = state.index + 1;
+    dom.quiz.number.textContent = state.index + 1;
     dom.quiz.question.textContent = question.text;
-    dom.quiz.options.innerHTML    = question.options
-      .map((option, idx) => `
-        <button type="button" class="option" data-index="${idx}">
-          <span class="option__key">${CONFIG.answerLetters[idx]}</span>
-          <span class="option__text">${escapeHtml(option)}</span>
-          <span class="option__icon" aria-hidden="true"></span>
-        </button>`)
-      .join('');
+    dom.quiz.options.innerHTML = question.options.map((option, idx) => `
+      <button type="button" class="option" data-index="${idx}">
+        <span class="option__key">${CONFIG.answerLetters[idx]}</span>
+        <span class="option__text">${escapeHtml(option)}</span>
+        <span class="option__icon" aria-hidden="true"></span>
+      </button>`).join('');
 
     paintProgress();
     startTimer();
   }
 
-  /* ---------- Сегментированный прогресс ---------- */
-
   function buildProgressSegments() {
-    dom.quiz.progress.innerHTML = state.questions
-      .map(() => '<span class="progress__seg"></span>')
-      .join('');
+    dom.quiz.progress.innerHTML = state.questions.map(() => '<span class="progress__seg"></span>').join('');
   }
 
   function paintProgress() {
-    $$('.progress__seg', dom.quiz.progress).forEach((segment, idx) => {
-      segment.className = 'progress__seg';
+    $$('.progress__seg', dom.quiz.progress).forEach((seg, idx) => {
+      seg.className = 'progress__seg';
       if (idx < state.history.length) {
-        segment.classList.add(state.history[idx] ? 'progress__seg--ok' : 'progress__seg--fail');
+        seg.classList.add(state.history[idx] ? 'progress__seg--ok' : 'progress__seg--fail');
       } else if (idx === state.index) {
-        segment.classList.add('progress__seg--current');
+        seg.classList.add('progress__seg--current');
       }
     });
   }
 
-  /* ---------- Тост обратной связи ---------- */
-
   function showToast(kind, text) {
     const toast = dom.quiz.toast;
     clearTimeout(state.toastId);
-
     toast.className = `toast toast--${kind}`;
     toast.textContent = text;
     void toast.offsetWidth;
     toast.classList.add('is-visible');
-
     state.toastId = setTimeout(() => toast.classList.remove('is-visible'), 1100);
   }
 
-  /* ============================================================
-     08. ТАЙМЕР-КОЛЬЦО
-     ============================================================ */
+  function setNameError(visible) {
+    dom.start.name.classList.remove('field--invalid');
+    if (visible) {
+      void dom.start.name.offsetWidth;
+      dom.start.name.classList.add('field--invalid');
+    }
+    dom.start.nameError.classList.toggle('is-visible', visible);
+  }
 
   function startTimer() {
     stopTimer();
-
     state.timeLeft = CONFIG.secondsPerQuestion;
     dom.quiz.timer.classList.remove('timer--warn');
     updateTimerUi();
     restartTimerRing();
 
     state.timerId = setInterval(() => {
-      state.timeLeft     -= 1;
+      state.timeLeft -= 1;
       state.spentSeconds += 1;
       updateTimerUi();
 
@@ -1296,7 +1585,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
   const updateTimerUi = () => { dom.quiz.timerValue.textContent = state.timeLeft; };
 
-  /** Кольцо «стекает» с 0 до полной длины окружности за отведённое время. */
   function restartTimerRing() {
     const ring = dom.quiz.timerRing;
     ring.style.transition = 'none';
@@ -1312,10 +1600,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     ring.style.transition = 'none';
   }
 
-  /* ============================================================
-     09. ОБРАБОТКА ОТВЕТА
-     ============================================================ */
-
   function handleOptionClick(index) {
     if (state.locked) return;
 
@@ -1325,8 +1609,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     }
 
     state.selected = index;
-    $$('.option', dom.quiz.options).forEach((button) =>
-      button.classList.toggle('option--selected', Number(button.dataset.index) === index));
+    $$('.option', dom.quiz.options).forEach(btn =>
+      btn.classList.toggle('option--selected', Number(btn.dataset.index) === index));
   }
 
   function confirmAnswer(chosenIndex) {
@@ -1335,11 +1619,10 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     state.locked = true;
     stopTimer();
 
-    const question  = state.questions[state.index];
+    const question = state.questions[state.index];
     const isCorrect = chosenIndex === question.correctIndex;
     const timeSpent = CONFIG.secondsPerQuestion - state.timeLeft;
 
-    // Сохраняем детали ответа для Google Sheets
     state.answers.push({
       questionNumber: state.index + 1,
       questionText: question.text,
@@ -1349,14 +1632,14 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
       timeSpent: timeSpent,
     });
 
-    $$('.option', dom.quiz.options).forEach((button) => {
-      const idx = Number(button.dataset.index);
-      button.disabled = true;
-      button.classList.remove('option--selected');
+    $$('.option', dom.quiz.options).forEach(btn => {
+      const idx = Number(btn.dataset.index);
+      btn.disabled = true;
+      btn.classList.remove('option--selected');
 
-      if (idx === question.correctIndex) button.classList.add('option--correct');
-      else if (idx === chosenIndex)      button.classList.add('option--wrong');
-      else                               button.classList.add('option--dim');
+      if (idx === question.correctIndex) btn.classList.add('option--correct');
+      else if (idx === chosenIndex) btn.classList.add('option--wrong');
+      else btn.classList.add('option--dim');
     });
 
     if (isCorrect) {
@@ -1370,49 +1653,38 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     paintProgress();
 
     if (chosenIndex === TIMEOUT) showToast('warn', TOASTS.timeout);
-    else if (isCorrect)          showToast('ok',   TOASTS.correct);
-    else                         showToast('fail', TOASTS.wrong);
+    else if (isCorrect) showToast('ok', TOASTS.correct);
+    else showToast('fail', TOASTS.wrong);
 
-    setTimeout(nextQuestion, CONFIG.answerRevealDelay);
+    setTimeout(() => {
+      state.index += 1;
+      if (state.index < state.questions.length) renderQuestion();
+      else finishGame();
+    }, CONFIG.answerRevealDelay);
   }
-
-  function nextQuestion() {
-    state.index += 1;
-    if (state.index < state.questions.length) renderQuestion();
-    else finishGame();
-  }
-
-  /* ============================================================
-     10. ФИНАЛ ИГРЫ
-     ============================================================ */
 
   function finishGame() {
     stopTimer();
 
-    const total    = state.questions.length;
+    const total = state.questions.length;
     const accuracy = Math.round((state.score / total) * 100);
-    const grade    = GRADES.find((item) => accuracy >= item.min);
+    const grade = GRADES.find(g => accuracy >= g.min);
 
-    state.lastResultId = saveResult();
-
-    // Отправляем данные в Google Sheets
-    sendToGoogleSheets();
-
-    dom.result.grade.textContent  = grade.title;
-    dom.result.note.textContent   = grade.note;
-    dom.result.name.textContent   = state.player;
-    dom.result.time.textContent   = formatTime(state.spentSeconds);
+    dom.result.grade.textContent = grade.title;
+    dom.result.note.textContent = grade.note;
+    dom.result.name.textContent = state.player;
+    dom.result.time.textContent = formatTime(state.spentSeconds);
     dom.result.streak.textContent = state.bestStreak;
 
     animateNumber(dom.result.score, state.score);
-    animateNumber(dom.result.accNum, accuracy, { duration: 1100, format: (v) => `${v}%` });
+    animateNumber(dom.result.accNum, accuracy, { duration: 1100, format: v => `${v}%` });
     animateAccuracyRing(accuracy);
 
+    sendToGoogleSheets();
     showScreen('result');
     if (accuracy >= CONFIG.passThreshold) launchConfetti();
   }
 
-  /** Плавное заполнение кольца точности. */
   function animateAccuracyRing(accuracy) {
     const ring = dom.result.accFill;
     ring.style.transition = 'none';
@@ -1422,17 +1694,14 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     ring.style.strokeDashoffset = String(ACC_C * (1 - accuracy / 100));
   }
 
-  /* ============================================================
-     11. ОТПРАВКА ДАННЫХ В GOOGLE SHEETS
-     ============================================================ */
-
   function sendToGoogleSheets() {
     const resultData = {
-      id: state.lastResultId,
+      action: 'submit',
+      id: Date.now(),
       name: state.player,
+      month: state.activeMonth?.name || '',
       score: state.score,
       totalQuestions: state.questions.length,
-      accuracy: Math.round((state.score / state.questions.length) * 100),
       timeSeconds: state.spentSeconds,
       bestStreak: state.bestStreak,
       answers: state.answers,
@@ -1441,195 +1710,202 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     fetch(GOOGLE_SHEETS_URL, {
       method: 'POST',
       mode: 'no-cors',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(resultData),
-    })
-    .then(() => {
-      console.log('✅ Данные отправлены в Google Sheets');
-    })
-    .catch((error) => {
-      console.error('❌ Ошибка отправки в Google Sheets:', error);
+    }).then(() => {
+      console.log('✅ Данные отправлены');
+    }).catch((error) => {
+      console.error('❌ Ошибка отправки:', error);
     });
   }
 
-  /* ============================================================
-     12. ЗАГРУЗКА РЕЙТИНГА ИЗ GOOGLE SHEETS
-     ============================================================ */
-
-  async function loadLeaderboardFromSheets() {
-    try {
-      const response = await fetch(GOOGLE_SHEETS_URL);
-      const data = await response.json();
-      return Array.isArray(data) ? data : [];
-    } catch (error) {
-      console.error('Ошибка загрузки рейтинга:', error);
-      return [];
-    }
-  }
-
-  /* ============================================================
-     13. РЕЙТИНГ И ХРАНЕНИЕ
-     ============================================================ */
-
-  function readSavedResults() {
-    try {
-      return JSON.parse(localStorage.getItem(CONFIG.storageKey)) ?? [];
-    } catch {
-      return [];
-    }
-  }
-
-  function saveResult() {
-    const entry = {
-      id: Date.now(),
-      name: state.player,
-      score: state.score,
-      seconds: state.spentSeconds,
-    };
-    try {
-      localStorage.setItem(CONFIG.storageKey, JSON.stringify([...readSavedResults(), entry]));
-    } catch {
-      /* приватный режим — результат не сохраняется */
-    }
-    return entry.id;
-  }
-
-  async function renderLeaderboard(highlightId = null) {
-    // Показываем экран рейтинга сразу
+  async function renderMonthLeaderboard() {
+    setActiveNav('quiz');
+    toggleQuizElements(false);
     showScreen('leaderboard');
     
-    // Загружаем результаты из Google Sheets
-    const sheetResults = await loadLeaderboardFromSheets();
+    const monthName = state.activeMonth?.name || '';
+    dom.leaderboard.title.textContent = `Рейтинг: ${monthName}`;
     
-    // Если есть данные из Sheets, используем их
-    let all = sheetResults.length > 0 ? sheetResults : [...DEMO_RESULTS, ...readSavedResults()];
+    const results = await fetchFromSheets('leaderboard', `&month=${encodeURIComponent(monthName)}`) || [];
     
-    // Сортируем по очкам и времени
-    all = all.sort((a, b) => b.score - a.score || a.seconds - b.seconds);
+    dom.leaderboard.podium.innerHTML = buildPodiumHtml(results.slice(0, CONFIG.podiumSize));
     
-    const isMine = (entry) => entry.name === state.player;
-    
-    // Пьедестал: топ-3
-    dom.board.podium.innerHTML = buildPodiumHtml(all.slice(0, CONFIG.podiumSize), isMine);
-    
-    // Таблица: все остальные (с 4-го места и далее)
-    const rest = CONFIG.boardSize > 0 
-      ? all.slice(CONFIG.podiumSize, CONFIG.boardSize)
-      : all.slice(CONFIG.podiumSize);
-    
-    let html = rest
-      .map((entry, offset) => boardRowHtml(entry, CONFIG.podiumSize + offset, isMine(entry)))
-      .join('');
-    
-    dom.board.rows.innerHTML = html;
+    const rest = results.slice(CONFIG.podiumSize);
+    dom.leaderboard.rows.innerHTML = rest.map((entry, i) =>
+      boardRowHtml(entry, CONFIG.podiumSize + i, entry.name === state.player)).join('');
   }
 
-  /** Пьедестал рисуется в порядке: серебро · золото · бронза. */
-  function buildPodiumHtml(topThree, isMine) {
-    const layout = [1, 0, 2]; // индексы мест для визуального порядка
-    return layout
-      .filter((rank) => topThree[rank])
-      .map((rank) => podiumCardHtml(topThree[rank], rank, isMine(topThree[rank])))
-      .join('');
+  async function renderOverallLeaderboard() {
+    setActiveNav('overall');
+    toggleQuizElements(false);
+    showScreen('overall');
+    
+    const results = await fetchFromSheets('overall') || [];
+    
+    dom.overall.podium.innerHTML = buildPodiumHtml(results.slice(0, CONFIG.podiumSize));
+    
+    const rest = results.slice(CONFIG.podiumSize);
+    dom.overall.rows.innerHTML = rest.map((entry, i) =>
+      overallRowHtml(entry, CONFIG.podiumSize + i, entry.name === state.player)).join('');
   }
 
-  function podiumCardHtml(entry, rank, mine) {
-    const place = rank + 1;
-    return `
-      <div class="podium__col podium__col--${place}">
-        <div class="podium__card">
-          <div class="podium__medal ${place > 1 ? `podium__medal--${place}` : ''}">${place}</div>
-          <div class="podium__ava">${escapeHtml(getInitials(entry.name))}</div>
-          <div class="podium__name">${escapeHtml(entry.name)}</div>
-          <div class="podium__meta"><b>${entry.score}</b> верно · ${formatTime(entry.seconds)}</div>
-          ${mine ? '<div class="podium__tag">вы</div>' : ''}
-        </div>
-        <div class="podium__bar"></div>
-      </div>`;
+  async function renderArchive() {
+    setActiveNav('archive');
+    toggleQuizElements(false);
+    showScreen('archive');
+    
+    const months = await fetchFromSheets('archive') || [];
+    
+    dom.archive.grid.innerHTML = months.map(m => `
+      <div class="archive-month" data-month="${escapeHtml(m.name)}">
+        <div class="archive-month__name">${escapeHtml(m.name)}</div>
+        <div class="archive-month__year">${escapeHtml(String(m.year))}</div>
+      </div>`).join('');
+    
+    $$('.archive-month').forEach(el => {
+      el.addEventListener('click', async () => {
+        const month = el.dataset.month;
+        dom.leaderboard.title.textContent = `Рейтинг: ${month}`;
+        const results = await fetchFromSheets('leaderboard', `&month=${encodeURIComponent(month)}`) || [];
+        dom.leaderboard.podium.innerHTML = buildPodiumHtml(results.slice(0, CONFIG.podiumSize));
+        const rest = results.slice(CONFIG.podiumSize);
+        dom.leaderboard.rows.innerHTML = rest.map((entry, i) =>
+          boardRowHtml(entry, CONFIG.podiumSize + i, entry.name === state.player)).join('');
+        toggleQuizElements(false);
+        showScreen('leaderboard');
+      });
+    });
+  }
+
+  function buildPodiumHtml(topThree) {
+    const layout = [1, 0, 2];
+    return layout.filter(rank => topThree[rank]).map(rank => {
+      const entry = topThree[rank];
+      const place = rank + 1;
+      const mine = entry.name === state.player;
+      const isOverall = entry.totalScore !== undefined;
+      const value = isOverall ? entry.totalScore : entry.score;
+      const label = isOverall ? 'очков' : 'верно';
+      const time = entry.seconds ? ` · ${formatTime(entry.seconds)}` : '';
+      return `
+        <div class="podium__col podium__col--${place}">
+          <div class="podium__card">
+            <div class="podium__medal ${place > 1 ? `podium__medal--${place}` : ''}">${place}</div>
+            <div class="podium__ava">${escapeHtml(getInitials(entry.name))}</div>
+            <div class="podium__name">${escapeHtml(entry.name)}</div>
+            <div class="podium__meta"><b>${value}</b> ${label}${time}</div>
+            ${mine ? '<div class="podium__tag">вы</div>' : ''}
+          </div>
+          <div class="podium__bar"></div>
+        </div>`;
+    }).join('');
   }
 
   function boardRowHtml(entry, place, mine) {
-    const rowClass = `board__row${mine ? ' board__row--mine' : ''}`;
-    const tag      = mine ? '<span class="board__tag">вы</span>' : '';
     return `
-      <div class="${rowClass}">
+      <div class="board__row${mine ? ' board__row--mine' : ''}">
         <div class="board__place">${place + 1}</div>
-        <div class="board__name">${escapeHtml(entry.name)}${tag}</div>
+        <div class="board__name">${escapeHtml(entry.name)}${mine ? '<span class="board__tag">вы</span>' : ''}</div>
         <div class="board__num">${entry.score}</div>
         <div class="board__num">${formatTime(entry.seconds)}</div>
       </div>`;
   }
 
-  /* ============================================================
-     14. ЭФФЕКТЫ
-     ============================================================ */
+  function overallRowHtml(entry, place, mine) {
+    return `
+      <div class="board__row${mine ? ' board__row--mine' : ''}">
+        <div class="board__place">${place + 1}</div>
+        <div class="board__name">${escapeHtml(entry.name)}${mine ? '<span class="board__tag">вы</span>' : ''}</div>
+        <div class="board__num">${entry.totalScore}</div>
+        <div class="board__num">${entry.participations}</div>
+      </div>`;
+  }
 
   function launchConfetti(count = 90) {
-    const colors   = ['#E01B24', '#E7C69A', '#FFFFFF', '#A5121B'];
+    const colors = ['#E01B24', '#E7C69A', '#FFFFFF', '#A5121B'];
     const fragment = document.createDocumentFragment();
 
     Array.from({ length: count }, (_, i) => {
       const piece = document.createElement('div');
       piece.className = 'confetti';
-      piece.style.left           = `${Math.random() * 100}vw`;
-      piece.style.background     = colors[i % colors.length];
+      piece.style.left = `${Math.random() * 100}vw`;
+      piece.style.background = colors[i % colors.length];
       piece.style.animationDelay = `${(Math.random() * 1.2).toFixed(2)}s`;
       if (i % 3 === 0) piece.style.borderRadius = '50%';
       fragment.appendChild(piece);
     });
 
     document.body.appendChild(fragment);
-    setTimeout(() => $$('.confetti').forEach((piece) => piece.remove()), 4600);
+    setTimeout(() => $$('.confetti').forEach(p => p.remove()), 4600);
   }
-
-  /* ============================================================
-     15. СОБЫТИЯ
-     ============================================================ */
 
   function bindEvents() {
+    // Модальное окно
+    dom.helpBtn.addEventListener('click', openModal);
+    dom.modalClose.addEventListener('click', closeModal);
+    dom.modalOverlay.addEventListener('click', (e) => {
+      if (e.target === dom.modalOverlay) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // Навигация
+    dom.navTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const nav = tab.dataset.nav;
+        if (nav === 'quiz') {
+          setActiveNav('quiz');
+          toggleQuizElements(true);
+          showScreen('start');
+        } else if (nav === 'overall') {
+          renderOverallLeaderboard();
+        } else if (nav === 'archive') {
+          renderArchive();
+        }
+      });
+    });
+
     dom.start.start.addEventListener('click', startGame);
-    dom.start.peek.addEventListener('click', () => renderLeaderboard());
+    dom.start.monthLeaderboard.addEventListener('click', renderMonthLeaderboard);
     dom.start.name.addEventListener('input', () => setNameError(false));
-    dom.start.name.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter') startGame();
+    dom.start.name.addEventListener('keydown', e => {
+      if (e.key === 'Enter') startGame();
     });
 
-    dom.quiz.options.addEventListener('click', (event) => {
-      const button = event.target.closest('.option');
-      if (button) handleOptionClick(Number(button.dataset.index));
+    dom.quiz.options.addEventListener('click', e => {
+      const btn = e.target.closest('.option');
+      if (btn) handleOptionClick(Number(btn.dataset.index));
     });
 
-    dom.result.toBoard.addEventListener('click', () => renderLeaderboard(state.lastResultId));
-    dom.board.back.addEventListener('click', () => showScreen('start'));
+    dom.result.toBoard.addEventListener('click', renderMonthLeaderboard);
 
-    document.addEventListener('keydown', (event) => {
-      if (!isScreenActive('quiz') || state.locked) return;
-
-      const digit = Number(event.key);
-      if (Number.isInteger(digit) && digit >= 1 && digit <= CONFIG.answerLetters.length) {
-        handleOptionClick(digit - 1);
-      } else if (event.key === 'Enter' && state.selected !== null) {
-        confirmAnswer(state.selected);
-      }
+    dom.leaderboard.back.addEventListener('click', () => {
+      setActiveNav('quiz');
+      toggleQuizElements(true);
+      showScreen('start');
+    });
+    dom.overall.back.addEventListener('click', () => {
+      setActiveNav('quiz');
+      toggleQuizElements(true);
+      showScreen('start');
+    });
+    dom.archive.back.addEventListener('click', () => {
+      setActiveNav('quiz');
+      toggleQuizElements(true);
+      showScreen('start');
     });
   }
 
-  /* ============================================================
-     16. ИНИЦИАЛИЗАЦИЯ
-     ============================================================ */
-
   function init() {
-    dom.result.total.textContent = `/${CONFIG.questionsPerGame}`;
-
-    // Подготовка SVG-колец
-    dom.quiz.timerRing.style.strokeDasharray  = String(TIMER_C);
+    dom.quiz.timerRing.style.strokeDasharray = String(TIMER_C);
     dom.quiz.timerRing.style.strokeDashoffset = '0';
-    dom.result.accFill.style.strokeDasharray  = String(ACC_C);
+    dom.result.accFill.style.strokeDasharray = String(ACC_C);
     dom.result.accFill.style.strokeDashoffset = String(ACC_C);
 
     bindEvents();
+    initApp();
   }
 
   init();
