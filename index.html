@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Викторина месяца — Своя игра</title>
+<title>Викторина EOS — Своя игра</title>
 
 <!-- Шрифты: Unbounded (акцентный) + Montserrat (основной) -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/unbounded/500.css">
@@ -18,7 +18,7 @@
 
 <style>
 /* ============================================================
-   ВИКТОРИНА месяца · СВОЯ ИГРА · DESIGN v6
+   ВИКТОРИНА EOS · СВОЯ ИГРА · DESIGN v6
    ============================================================ */
 
 :root {
@@ -1063,7 +1063,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   <div class="hero__ring hero__ring--sm"></div>
 
   <div class="hero__badge"><span class="caps">Своя игра EOS · 2026</span></div>
-  <h1 class="hero__title">ВИКТОРИНА <span class="hero__title-accent">МЕСЯЦА</span></h1>
+  <h1 class="hero__title">ВИКТОРИНА <span class="hero__title-accent">EOS</span></h1>
   <p class="hero__tagline">Отвечай на вопросы месяца и зарабатывай очки в общий рейтинг</p>
 
   <div class="hero__wave"></div>
@@ -1428,26 +1428,39 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
         CONFIG.questionsPerGame = parseInt(state.settings['Вопросов в игре']) || 10;
         CONFIG.secondsPerQuestion = parseInt(state.settings['Секунд на вопрос']) || 25;
       }
-    } catch(e) {}
+    } catch(e) {
+      console.log('Настройки не загрузились');
+    }
 
     try {
       state.months = await fetchFromSheets('months') || [];
-    } catch(e) { state.months = []; }
+    } catch(e) { 
+      state.months = []; 
+    }
 
-    state.activeMonth = state.months.find(m => m.status === 'Активен') || { name: 'Август', year: 2026, status: 'Активен' };
-    state.nextMonth = state.months.find(m => m.status === 'Закрыт') || { name: 'Сентябрь', year: 2026, status: 'Закрыт' };
+    state.activeMonth = state.months.find(m => m.status === 'Активен');
+    state.nextMonth = state.months.find(m => m.status === 'Закрыт');
+
+    if (!state.activeMonth) {
+      state.activeMonth = { name: 'Август', year: 2026, status: 'Активен' };
+    }
+    if (!state.nextMonth) {
+      state.nextMonth = { name: 'Сентябрь', year: 2026, status: 'Закрыт' };
+    }
 
     try {
       state.questions = await fetchFromSheets('questions', `&month=${encodeURIComponent(state.activeMonth.name)}`) || [];
-    } catch(e) { state.questions = []; }
-
-    if (state.questions.length === 0) {
-      console.error('❌ Вопросы не загрузились из Google Sheets!');
-      dom.quiz.question.textContent = 'Вопросы не загрузились. Проверьте таблицу.';
-      return;
+    } catch(e) { 
+      state.questions = []; 
     }
 
-    CONFIG.questionsPerGame = state.questions.length;
+    if (state.questions.length === 0) {
+      console.error('❌ Вопросы не загрузились!');
+    } else {
+      console.log('✅ Загружено вопросов:', state.questions.length);
+    }
+
+    CONFIG.questionsPerGame = state.questions.length || CONFIG.questionsPerGame;
     dom.quiz.total.textContent = CONFIG.questionsPerGame;
     dom.result.total.textContent = `/${CONFIG.questionsPerGame}`;
 
@@ -1479,6 +1492,11 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   }
 
   function startGame() {
+    if (!state.questions || state.questions.length === 0) {
+      alert('Вопросы ещё загружаются. Подожди пару секунд и попробуй снова.');
+      return;
+    }
+
     const rawName = dom.start.name.value.trim();
 
     if (!CONFIG.namePattern.test(rawName)) {
@@ -1504,7 +1522,12 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   function renderQuestion() {
     const question = state.questions[state.index];
     if (!question) {
-      finishGame();
+      if (state.index >= state.questions.length && state.questions.length > 0) {
+        finishGame();
+      } else {
+        console.error('❌ Вопросы не загрузились!');
+        dom.quiz.question.textContent = 'Вопросы не загрузились. Проверьте таблицу.';
+      }
       return;
     }
 
@@ -1667,8 +1690,14 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     stopTimer();
 
     const total = state.questions.length;
+    if (total === 0) {
+      console.error('❌ Нет вопросов!');
+      showScreen('start');
+      return;
+    }
+
     const accuracy = Math.round((state.score / total) * 100);
-    const grade = GRADES.find(g => accuracy >= g.min);
+    const grade = GRADES.find(g => accuracy >= g.min) || GRADES[GRADES.length - 1];
 
     dom.result.grade.textContent = grade.title;
     dom.result.note.textContent = grade.note;
@@ -1841,7 +1870,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   }
 
   function bindEvents() {
-    // Модальное окно
     dom.helpBtn.addEventListener('click', openModal);
     dom.modalClose.addEventListener('click', closeModal);
     dom.modalOverlay.addEventListener('click', (e) => {
@@ -1851,7 +1879,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
       if (e.key === 'Escape') closeModal();
     });
 
-    // Навигация
     dom.navTabs.forEach(tab => {
       tab.addEventListener('click', () => {
         const nav = tab.dataset.nav;
